@@ -3,6 +3,7 @@ package br.com.fiap.argus.controller;
 import br.com.fiap.argus.dto.request.BiomaRequestDTO;
 import br.com.fiap.argus.dto.response.BiomaResponseDTO;
 import br.com.fiap.argus.service.BiomaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,22 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/biomas")
+@Tag(
+        name = "BIOMA",
+        description = """
+        API responsável pelo gerenciamento dos biomas monitorados pelo ARGUS.
+        
+        Os biomas representam grandes ecossistemas brasileiros e servem como
+        base para o monitoramento de regiões, focos de calor e alertas ambientais.
+        
+        Funcionalidades disponíveis:
+        • Cadastrar biomas
+        • Listar biomas cadastrados
+        • Consultar bioma por identificador
+        • Atualizar informações de um bioma
+        • Remover biomas do sistema
+        """
+)
 public class BiomaController {
 
     private final BiomaService service;
