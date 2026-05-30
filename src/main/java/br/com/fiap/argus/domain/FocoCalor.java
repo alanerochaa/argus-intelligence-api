@@ -7,129 +7,72 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "FOCO_CALOR")
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class FocoCalor {
 
     @Id
-
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "SEQ_FOCO_CALOR"
     )
-
     @SequenceGenerator(
             name = "SEQ_FOCO_CALOR",
             sequenceName = "SEQ_FOCO_CALOR",
             allocationSize = 1
     )
-
     @Column(name = "ID_FOCO")
     private Long id;
 
-    @Column(
-            name = "LATITUDE",
-            nullable = false,
-            precision = 10,
-            scale = 6
-    )
+    @Column(name = "LATITUDE", nullable = false)
     private Double latitude;
 
-    @Column(
-            name = "LONGITUDE",
-            nullable = false,
-            precision = 10,
-            scale = 6
-    )
+    @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
 
-    @Column(
-            name = "FRP",
-            precision = 10,
-            scale = 2
-    )
+    @Column(name = "FRP")
     private Double frp;
 
-    @Column(
-            name = "TEMPERATURA_ESTIMADA",
-            precision = 6,
-            scale = 2
-    )
+    @Column(name = "TEMPERATURA_ESTIMADA")
     private Double temperaturaEstimada;
 
-    @Column(
-            name = "CONFIANCA",
-            length = 30
-    )
+    @Column(name = "CONFIANCA", length = 30)
     private String confianca;
 
-    @Column(
-            name = "SATELITE",
-            length = 80
-    )
+    @Column(name = "SATELITE", length = 80)
     private String satelite;
 
-    @Column(
-            name = "SENSOR",
-            length = 80
-    )
+    @Column(name = "SENSOR", length = 80)
     private String sensor;
 
-    @Column(
-            name = "ORIGEM_DADO",
-            length = 80
-    )
+    @Column(name = "ORIGEM_DADO", nullable = false, length = 80)
     private String origemDado;
 
-    @Column(
-            name = "DATA_HORA",
-            nullable = false
-    )
+    @Column(name = "DATA_HORA", nullable = false)
     private LocalDateTime dataHora;
 
-    @Column(
-            name = "STATUS",
-            nullable = false,
-            length = 30
-    )
+    @Column(name = "STATUS", nullable = false, length = 30)
     private String status;
 
     @Lob
     @Column(name = "PAYLOAD_JSON")
     private String payloadJson;
 
-    @Column(
-            name = "DATA_CRIACAO",
-            nullable = false,
-            updatable = false
-    )
+    @Column(name = "DATA_CRIACAO", nullable = false, updatable = false)
     private LocalDateTime dataCriacao;
 
-    // =========================
-    // RELACIONAMENTO
-    // =========================
+    @Column(name = "DATA_ATUALIZACAO")
+    private LocalDateTime dataAtualizacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-
-    @JoinColumn(
-            name = "ID_REGIAO",
-            nullable = false
-    )
-
+    @JoinColumn(name = "ID_REGIAO", nullable = false)
     private Regiao regiao;
-
-    // =========================
-    // CONTROLE AUTOMÁTICO
-    // =========================
 
     @PrePersist
     public void prePersist() {
-
         this.dataCriacao = LocalDateTime.now();
 
         if (this.dataHora == null) {
@@ -143,5 +86,10 @@ public class FocoCalor {
         if (this.origemDado == null) {
             this.origemDado = "NASA FIRMS";
         }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.dataAtualizacao = LocalDateTime.now();
     }
 }
