@@ -14,9 +14,48 @@ public class ProdutorAlerta {
     public void enviarAlerta(
             AlertaResponseDTO alerta
     ) {
+
+        String mensagem =
+                """
+                =====================================
+                 ALERTA AMBIENTAL - ARGUS
+                =====================================
+
+                ID................: %d
+                TÍTULO............: %s
+                NÍVEL.............: %s
+                STATUS............: %s
+                SCORE DE RISCO....: %.1f
+
+                RECOMENDAÇÃO:
+                %s
+
+                FOCO DE CALOR.....: %d
+
+                =====================================
+                """
+                        .formatted(
+                                alerta.id(),
+                                alerta.titulo(),
+                                alerta.nivel(),
+                                alerta.status(),
+                                alerta.scoreRisco(),
+                                alerta.recomendacaoOperacional(),
+                                alerta.focoCalorId()
+                        );
+
         rabbitTemplate.convertAndSend(
                 MessagingConfig.FILA_ALERTAS,
-                alerta
+                mensagem
+        );
+
+        System.out.println(
+                "\n Mensagem enviada para RabbitMQ:"
+        );
+
+        System.out.println(
+                mensagem
         );
     }
+
 }

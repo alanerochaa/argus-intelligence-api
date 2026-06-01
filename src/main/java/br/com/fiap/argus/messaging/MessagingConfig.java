@@ -12,9 +12,12 @@ public class MessagingConfig {
 
     @Bean
     public Queue filaAlertas() {
+
         return new Queue(
                 FILA_ALERTAS,
                 true
         );
+
     }
+
 }
