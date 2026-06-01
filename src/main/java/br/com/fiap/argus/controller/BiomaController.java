@@ -3,10 +3,10 @@ package br.com.fiap.argus.controller;
 import br.com.fiap.argus.dto.request.BiomaRequestDTO;
 import br.com.fiap.argus.dto.response.BiomaResponseDTO;
 import br.com.fiap.argus.service.BiomaService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,19 +15,7 @@ import java.util.List;
 @RequestMapping("/api/biomas")
 @Tag(
         name = "BIOMA",
-        description = """
-        API responsável pelo gerenciamento dos biomas monitorados pelo ARGUS.
-        
-        Os biomas representam grandes ecossistemas brasileiros e servem como
-        base para o monitoramento de regiões, focos de calor e alertas ambientais.
-        
-        Funcionalidades disponíveis:
-        • Cadastrar biomas
-        • Listar biomas cadastrados
-        • Consultar bioma por identificador
-        • Atualizar informações de um bioma
-        • Remover biomas do sistema
-        """
+        description = "Gerenciamento dos biomas monitorados pelo ARGUS."
 )
 public class BiomaController {
 
@@ -38,24 +26,29 @@ public class BiomaController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar biomas")
     public ResponseEntity<List<BiomaResponseDTO>> listarTodos() {
         return ResponseEntity.ok(service.listarTodos());
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Buscar bioma por ID")
     public ResponseEntity<BiomaResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PostMapping
+    @Operation(summary = "Cadastrar bioma")
     public ResponseEntity<BiomaResponseDTO> cadastrar(
             @RequestBody @Valid BiomaRequestDTO dto
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .body(service.cadastrar(dto));
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Atualizar bioma")
     public ResponseEntity<BiomaResponseDTO> atualizar(
             @PathVariable Long id,
             @RequestBody @Valid BiomaRequestDTO dto
@@ -64,6 +57,7 @@ public class BiomaController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Remover bioma")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
