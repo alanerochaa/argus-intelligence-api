@@ -5,6 +5,7 @@ import br.com.fiap.argus.domain.FocoCalor;
 import br.com.fiap.argus.dto.request.AlertaRequestDTO;
 import br.com.fiap.argus.dto.response.AlertaResponseDTO;
 import br.com.fiap.argus.mapper.AlertaMapper;
+import br.com.fiap.argus.messaging.ProdutorAlerta;
 import br.com.fiap.argus.repository.AlertaRepository;
 import br.com.fiap.argus.repository.FocoCalorRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,6 +20,7 @@ public class AlertaService {
 
     private final AlertaRepository alertaRepository;
     private final FocoCalorRepository focoCalorRepository;
+    private final ProdutorAlerta produtorAlerta;
 
     public AlertaResponseDTO criar(AlertaRequestDTO dto) {
         FocoCalor focoCalor = buscarFocoCalor(dto.focoCalorId());
@@ -26,7 +28,11 @@ public class AlertaService {
         Alerta alerta = AlertaMapper.toEntity(dto, focoCalor);
         Alerta alertaSalvo = alertaRepository.save(alerta);
 
-        return AlertaMapper.toResponse(alertaSalvo);
+        AlertaResponseDTO response = AlertaMapper.toResponse(alertaSalvo);
+
+        produtorAlerta.enviarAlerta(response);
+
+        return response;
     }
 
     public List<AlertaResponseDTO> listar() {
