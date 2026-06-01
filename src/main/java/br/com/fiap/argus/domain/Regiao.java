@@ -1,6 +1,7 @@
 package br.com.fiap.argus.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,62 +18,85 @@ public class Regiao {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "SEQ_REGIAO"
+            generator = "seq_regiao"
     )
     @SequenceGenerator(
-            name = "SEQ_REGIAO",
+            name = "seq_regiao",
             sequenceName = "SEQ_REGIAO",
             allocationSize = 1
     )
     @Column(name = "ID_REGIAO")
     private Long id;
 
-    @Column(name = "NOME", nullable = false, length = 150)
+    @NotBlank
+    @Size(max = 150)
+    @Column(name = "NOME", nullable = false)
     private String nome;
 
-    @Column(name = "ESTADO", nullable = false, length = 2)
+    @NotBlank
+    @Size(min = 2, max = 2)
+    @Column(name = "ESTADO", nullable = false)
     private String estado;
 
-    @Column(name = "CIDADE_REFERENCIA", length = 120)
+    @Size(max = 120)
+    @Column(name = "CIDADE_REFERENCIA")
     private String cidadeReferencia;
 
+    @DecimalMin("-90.0")
+    @DecimalMax("90.0")
     @Column(name = "LATITUDE_CENTRAL")
     private Double latitudeCentral;
 
+    @DecimalMin("-180.0")
+    @DecimalMax("180.0")
     @Column(name = "LONGITUDE_CENTRAL")
     private Double longitudeCentral;
 
-    @Column(name = "NIVEL_RISCO", nullable = false, length = 20)
+    @Pattern(
+            regexp = "BAIXO|MEDIO|ALTO|CRITICO"
+    )
+    @Column(name = "NIVEL_RISCO")
     private String nivelRisco;
 
-    @Column(name = "STATUS_MONITORAMENTO", nullable = false, length = 30)
+    @Pattern(
+            regexp = "ATIVA|INATIVA|EM_ANALISE"
+    )
+    @Column(name = "STATUS_MONITORAMENTO")
     private String statusMonitoramento;
 
-    @Column(name = "DATA_CRIACAO", nullable = false, updatable = false)
+    @Column(
+            name = "DATA_CRIACAO",
+            updatable = false
+    )
     private LocalDateTime dataCriacao;
 
-    @Column(name = "DATA_ATUALIZACAO")
+    @Column(
+            name = "DATA_ATUALIZACAO"
+    )
     private LocalDateTime dataAtualizacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_BIOMA", nullable = false)
+    @JoinColumn(
+            name = "ID_BIOMA",
+            nullable = false
+    )
     private Bioma bioma;
 
     @PrePersist
     public void prePersist() {
-        this.dataCriacao = LocalDateTime.now();
 
-        if (this.nivelRisco == null) {
-            this.nivelRisco = "BAIXO";
-        }
+        dataCriacao = LocalDateTime.now();
 
-        if (this.statusMonitoramento == null) {
-            this.statusMonitoramento = "ATIVA";
-        }
+        if (nivelRisco == null)
+            nivelRisco = "BAIXO";
+
+        if (statusMonitoramento == null)
+            statusMonitoramento = "ATIVA";
     }
 
     @PreUpdate
     public void preUpdate() {
-        this.dataAtualizacao = LocalDateTime.now();
+        dataAtualizacao = LocalDateTime.now();
     }
+
 }
