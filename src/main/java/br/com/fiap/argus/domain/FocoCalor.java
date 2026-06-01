@@ -1,6 +1,7 @@
 package br.com.fiap.argus.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,19 +18,21 @@ public class FocoCalor {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "SEQ_FOCO_CALOR"
+            generator = "seq_foco"
     )
     @SequenceGenerator(
-            name = "SEQ_FOCO_CALOR",
+            name = "seq_foco",
             sequenceName = "SEQ_FOCO_CALOR",
             allocationSize = 1
     )
     @Column(name = "ID_FOCO")
     private Long id;
 
+    @NotNull
     @Column(name = "LATITUDE", nullable = false)
     private Double latitude;
 
+    @NotNull
     @Column(name = "LONGITUDE", nullable = false)
     private Double longitude;
 
@@ -39,57 +42,56 @@ public class FocoCalor {
     @Column(name = "TEMPERATURA_ESTIMADA")
     private Double temperaturaEstimada;
 
-    @Column(name = "CONFIANCA", length = 30)
+    @Column(name = "CONFIANCA")
     private String confianca;
 
-    @Column(name = "SATELITE", length = 80)
+    @Column(name = "SATELITE")
     private String satelite;
 
-    @Column(name = "SENSOR", length = 80)
+    @Column(name = "SENSOR")
     private String sensor;
 
-    @Column(name = "ORIGEM_DADO", nullable = false, length = 80)
+    @Column(name = "ORIGEM_DADO")
     private String origemDado;
 
-    @Column(name = "DATA_HORA", nullable = false)
+    @Column(name = "DATA_HORA")
     private LocalDateTime dataHora;
 
-    @Column(name = "STATUS", nullable = false, length = 30)
+    @Column(name = "STATUS")
     private String status;
 
     @Lob
     @Column(name = "PAYLOAD_JSON")
     private String payloadJson;
 
-    @Column(name = "DATA_CRIACAO", nullable = false, updatable = false)
+    @Column(name = "DATA_CRIACAO")
     private LocalDateTime dataCriacao;
 
     @Column(name = "DATA_ATUALIZACAO")
     private LocalDateTime dataAtualizacao;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID_REGIAO", nullable = false)
+    @JoinColumn(name = "ID_REGIAO")
     private Regiao regiao;
 
     @PrePersist
     public void prePersist() {
-        this.dataCriacao = LocalDateTime.now();
 
-        if (this.dataHora == null) {
-            this.dataHora = LocalDateTime.now();
-        }
+        dataCriacao = LocalDateTime.now();
 
-        if (this.status == null) {
-            this.status = "ATIVO";
-        }
+        if (dataHora == null)
+            dataHora = LocalDateTime.now();
 
-        if (this.origemDado == null) {
-            this.origemDado = "NASA FIRMS";
-        }
+        if (origemDado == null)
+            origemDado = "NASA FIRMS";
+
+        if (status == null)
+            status = "ATIVO";
     }
 
     @PreUpdate
     public void preUpdate() {
-        this.dataAtualizacao = LocalDateTime.now();
+        dataAtualizacao = LocalDateTime.now();
     }
+
 }
