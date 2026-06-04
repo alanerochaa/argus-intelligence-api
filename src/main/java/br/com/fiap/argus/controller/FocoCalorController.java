@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/focos")
 @RequiredArgsConstructor
 @Tag(
-        name = "FOCO CALOR",
+        name = "Domínio ARGUS -FOCO CALOR",
         description = "Gerenciamento dos focos de calor monitorados pelo ARGUS."
 )
 public class FocoCalorController {

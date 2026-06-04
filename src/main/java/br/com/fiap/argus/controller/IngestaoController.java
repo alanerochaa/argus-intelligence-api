@@ -1,76 +1,54 @@
 package br.com.fiap.argus.controller;
 
-import br.com.fiap.argus.client.ClienteNASAFirms;
-import br.com.fiap.argus.dto.response.IngestaoResponseDTO;
+import br.com.fiap.argus.service.IngestaoService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/ingestao")
 @RequiredArgsConstructor
 @Tag(
-        name = "INGESTAO",
-        description = "Ingestão de dados satelitais da NASA FIRMS."
+        name = "Integrações Externas - NASA FIRMS",
+        description = "Consome dados de focos de calor da API externa NASA FIRMS."
 )
+
 public class IngestaoController {
 
-    private final ClienteNASAFirms clienteNASAFirms;
+    private final IngestaoService ingestaoService;
 
+    @Operation(
+            summary = "Consumir focos de calor da NASA (24 horas)",
+            description = """
+            Consome focos de calor detectados pela NASA
+            nas últimas 24 horas.
+            """
+    )
     @PostMapping("/sync/24h")
-    @Operation(summary = "Sincronizar focos 24h")
-    public ResponseEntity<IngestaoResponseDTO> sincronizarUltimas24Horas() {
+    public String sincronizar24Horas() {
 
-        String csv = clienteNASAFirms.buscarFocosCalorUltimas24Horas();
+        return ingestaoService
+                .consumirFocosCalorUltimas24Horas();
 
-        return ResponseEntity.ok(
-                montarResposta(csv, "24h")
-        );
     }
 
+    @Operation(
+            summary = "Consumir focos de calor da NASA (5 dias)",
+            description = """
+            Consome focos de calor detectados pela NASA
+            nos últimos 5 dias.
+            """
+    )
     @PostMapping("/sync/5dias")
-    @Operation(summary = "Sincronizar focos 5 dias")
-    public ResponseEntity<IngestaoResponseDTO> sincronizarUltimos5Dias() {
+    public String sincronizar5Dias() {
 
-        String csv = clienteNASAFirms.buscarFocosCalorUltimos5Dias();
+        return ingestaoService
+                .consumirFocosCalorUltimos5Dias();
 
-        return ResponseEntity.ok(
-                montarResposta(csv, "5 dias")
-        );
     }
 
-    private IngestaoResponseDTO montarResposta(
-            String csv,
-            String periodo
-    ) {
-        int totalRegistros = 0;
-
-        if (csv != null && !csv.isBlank()) {
-            totalRegistros = Math.max(
-                    (int) Arrays.stream(csv.split("\\R"))
-                            .filter(linha -> !linha.isBlank())
-                            .count() - 1,
-                    0
-            );
-        }
-
-        String amostraCsv = csv == null
-                ? ""
-                : csv.lines()
-                .limit(5)
-                .reduce("", (a, b) -> a + b + "\n");
-
-        return new IngestaoResponseDTO(
-                "SUCESSO",
-                "NASA FIRMS",
-                periodo,
-                totalRegistros,
-                "Consulta realizada com sucesso.",
-                amostraCsv
-        );
-    }
 }

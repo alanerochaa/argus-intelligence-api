@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/api/regioes")
 @RequiredArgsConstructor
 @Tag(
-        name = "REGIAO",
+        name = "Domínio ARGUS -REGIAO",
         description = "Gerenciamento das regiões monitoradas pelo ARGUS."
 )
 public class RegiaoController {

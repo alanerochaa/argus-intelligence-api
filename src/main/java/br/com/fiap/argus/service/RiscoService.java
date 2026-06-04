@@ -1,19 +1,13 @@
 package br.com.fiap.argus.service;
 
 import br.com.fiap.argus.client.ClienteWeather;
-
 import br.com.fiap.argus.domain.Regiao;
-
 import br.com.fiap.argus.dto.response.RiscoResponseDTO;
-
+import br.com.fiap.argus.exception.BusinessException;
+import br.com.fiap.argus.exception.ResourceNotFoundException;
 import br.com.fiap.argus.repository.FocoCalorRepository;
-
 import br.com.fiap.argus.repository.RegiaoRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,18 +25,15 @@ public class RiscoService {
     ) {
 
         Regiao regiao =
-                regiaoRepository
-                        .findById(id)
-                        .orElseThrow(
-                                () ->
-                                        new EntityNotFoundException(
-                                                "Região não encontrada."
-                                        )
-                        );
+                buscarRegiao(
+                        id
+                );
 
         long quantidadeFocos =
                 focoCalorRepository
-                        .countByRegiaoId(id);
+                        .countByRegiaoId(
+                                id
+                        );
 
         double score =
                 calcularScore(
@@ -50,16 +41,28 @@ public class RiscoService {
                         quantidadeFocos
                 );
 
-        String clima =
-                regiao.getLatitudeCentral() != null
-                        && regiao.getLongitudeCentral() != null
+        String clima;
 
-                        ? clienteWeather.buscarClima(
-                        regiao.getLatitudeCentral(),
-                        regiao.getLongitudeCentral()
-                )
+        try {
 
-                        : "Clima indisponível";
+            clima =
+                    regiao.getLatitudeCentral() != null
+                            && regiao.getLongitudeCentral() != null
+
+                            ? clienteWeather.buscarClima(
+                            regiao.getLatitudeCentral(),
+                            regiao.getLongitudeCentral()
+                    )
+
+                            : "Clima indisponível";
+
+        } catch (Exception ex) {
+
+            throw new BusinessException(
+                    "Erro ao consumir dados climáticos."
+            );
+
+        }
 
         return new RiscoResponseDTO(
 
@@ -78,6 +81,23 @@ public class RiscoService {
                 clima
 
         );
+
+    }
+
+    private Regiao buscarRegiao(
+            Long id
+    ) {
+
+        return regiaoRepository.findById(id)
+
+                .orElseThrow(
+
+                        () ->
+                                new ResourceNotFoundException(
+                                        "Região não encontrada com ID: " + id
+                                )
+
+                );
 
     }
 

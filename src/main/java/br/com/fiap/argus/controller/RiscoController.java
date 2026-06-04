@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/riscos")
 @RequiredArgsConstructor
 @Tag(
-        name = "RISCO",
+        name = "Domínio ARGUS -RISCO",
         description = "Análise de risco ambiental por região monitorada."
 )
 public class RiscoController {

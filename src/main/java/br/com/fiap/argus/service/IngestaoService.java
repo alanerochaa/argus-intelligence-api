@@ -12,17 +12,23 @@ public class IngestaoService {
 
     private final ClienteNASAFirms clienteNASAFirms;
 
-    public String sincronizar24Horas() {
+    public String consumirFocosCalorUltimas24Horas() {
 
-        return clienteNASAFirms
-                .buscarFocosCalorUltimas24Horas();
+        String response =
+                clienteNASAFirms
+                        .buscarFocosCalorUltimas24Horas();
+
+        return response;
 
     }
 
-    public String sincronizar5Dias() {
+    public String consumirFocosCalorUltimos5Dias() {
 
-        return clienteNASAFirms
-                .buscarFocosCalorUltimos5Dias();
+        String response =
+                clienteNASAFirms
+                        .buscarFocosCalorUltimos5Dias();
+
+        return response;
 
     }
 
