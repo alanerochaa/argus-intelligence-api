@@ -4,12 +4,14 @@ import br.com.fiap.argus.domain.Alerta;
 import br.com.fiap.argus.domain.FocoCalor;
 import br.com.fiap.argus.dto.request.AlertaRequestDTO;
 import br.com.fiap.argus.dto.response.AlertaResponseDTO;
+import br.com.fiap.argus.exception.ResourceNotFoundException;
 import br.com.fiap.argus.mapper.AlertaMapper;
 import br.com.fiap.argus.messaging.ProdutorAlerta;
 import br.com.fiap.argus.repository.AlertaRepository;
 import br.com.fiap.argus.repository.FocoCalorRepository;
-import jakarta.persistence.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,11 +67,11 @@ public class AlertaService {
 
     private Alerta buscarAlerta(Long id) {
         return alertaRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Alerta não encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Alerta não encontrado com ID: " + id));
     }
 
     private FocoCalor buscarFocoCalor(Long id) {
         return focoCalorRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Foco de calor não encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Foco de calor não encontrado com ID: " + id));
     }
 }
