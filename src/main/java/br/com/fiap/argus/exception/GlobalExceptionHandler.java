@@ -1,13 +1,19 @@
 package br.com.fiap.argus.exception;
 
 import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.validation.FieldError;
+
 import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 import java.time.LocalDateTime;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +34,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage()
         );
+
     }
 
     @ExceptionHandler(
@@ -44,6 +51,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage()
         );
+
     }
 
     @ExceptionHandler(
@@ -60,6 +68,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 ex.getMessage()
         );
+
     }
 
     @ExceptionHandler(
@@ -123,7 +132,10 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .badRequest()
-                .body(body);
+                .body(
+                        body
+                );
+
     }
 
     @ExceptionHandler(
@@ -136,10 +148,13 @@ public class GlobalExceptionHandler {
 
     ) {
 
+        ex.printStackTrace();
+
         return buildResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
-                ex.getMessage()
+                "Erro interno no servidor. Tente novamente mais tarde."
         );
+
     }
 
     private ResponseEntity<Map<String, Object>>
@@ -181,6 +196,7 @@ public class GlobalExceptionHandler {
                 .body(
                         body
                 );
+
     }
 
 }

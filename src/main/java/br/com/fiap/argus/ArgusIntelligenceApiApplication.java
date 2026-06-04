@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
+
 public class ArgusIntelligenceApiApplication {
 
 	public static void main(String[] args) {
@@ -18,7 +19,7 @@ public class ArgusIntelligenceApiApplication {
 		System.out.println("""
 
 ==========================================================
-🚀 ARGUS INTELLIGENCE API ATIVA
+🚀 ARGUS INTELLIGENCE API iniciada com sucesso!
 ==========================================================
 
 📌 Swagger:

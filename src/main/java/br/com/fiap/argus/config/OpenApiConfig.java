@@ -41,48 +41,7 @@ public class OpenApiConfig {
     
                                         Centralizar informações ambientais e apoiar a tomada de decisão
                                         através de monitoramento contínuo e integração entre serviços.
-    
-                                        ---
-    
-                                        ## 🚀 Funcionalidades
-    
-                                        ### 🌿 Biomas
-                                        Gerenciamento dos biomas monitorados.
-    
-                                        ### 📍 Regiões
-                                        Controle das regiões monitoradas e classificação de risco.
-    
-                                        ### 🔥 Focos de Calor
-                                        Monitoramento e ingestão de eventos detectados por satélite.
-    
-                                        ### 🚨 Alertas
-                                        Geração e gerenciamento de alertas ambientais.
-    
-                                        ### 🛰️ Integrações
-    
-                                        • NASA FIRMS  
-                                        • Weather API  
-                                        • API Operations (.NET)  
-                                        • API IA  
-    
-                                        ---
-    
-                                        ## 🛠️ Tecnologias
-    
-                                        Java • Spring Boot • Oracle Database  
-                                        REST API • OpenAPI • Feign Client
-    
-                                        ---
-    
-                                        ## 🎓 Projeto Acadêmico
-    
-                                        FIAP — Global Solution 2026/1
-    
-                                        ### 👩‍💻 Grupo: CodeGirls
-    
-                                        • Alane Rocha da Silva — RM561052  
-                                        • Anna Beatriz de Araujo Bonfim — RM559561  
-                                        • Maria Eduarda Araujo Penas — RM560944
+   
                                         """
                                 )
 
