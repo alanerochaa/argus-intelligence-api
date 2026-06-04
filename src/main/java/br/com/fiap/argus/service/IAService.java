@@ -1,8 +1,14 @@
 package br.com.fiap.argus.service;
 
 import br.com.fiap.argus.client.ClienteIA;
-import br.com.fiap.argus.dto.request.IARequestDTO;
-import br.com.fiap.argus.dto.response.IAResponseDTO;
+
+import br.com.fiap.argus.dto.request.IARequestConsultaDTO;
+import br.com.fiap.argus.dto.request.IARequestRelatorioDTO;
+
+import br.com.fiap.argus.dto.response.IAResponseConsultaDTO;
+import br.com.fiap.argus.dto.response.IAResponseRelatorioDTO;
+
+import br.com.fiap.argus.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,21 +20,59 @@ public class IAService {
 
     private final ClienteIA clienteIA;
 
-    public IAResponseDTO gerarRelatorio(
-            IARequestDTO dto
+    public IAResponseRelatorioDTO gerarRelatorio(
+            IARequestRelatorioDTO dto
     ) {
 
-        return clienteIA
-                .gerarRelatorio(dto);
+        try {
+
+            return clienteIA.gerarRelatorio(
+                    dto
+            );
+
+        } catch (Exception ex) {
+
+            throw new BusinessException(
+                    "Erro ao gerar relatório na API de IA."
+            );
+
+        }
 
     }
 
-    public IAResponseDTO consultar(
-            IARequestDTO dto
+    public IAResponseConsultaDTO consultar(
+            IARequestConsultaDTO dto
     ) {
 
-        return clienteIA
-                .consultarProcedimento(dto);
+        try {
+
+            return clienteIA.consultar(
+                    dto
+            );
+
+        } catch (Exception ex) {
+
+            throw new BusinessException(
+                    "Erro ao consultar a API de IA."
+            );
+
+        }
+
+    }
+
+    public String health() {
+
+        try {
+
+            return clienteIA.health();
+
+        } catch (Exception ex) {
+
+            throw new BusinessException(
+                    "API de IA indisponível."
+            );
+
+        }
 
     }
 
