@@ -3,26 +3,21 @@ package br.com.fiap.argus.service;
 import br.com.fiap.argus.domain.Bioma;
 import br.com.fiap.argus.dto.request.BiomaRequestDTO;
 import br.com.fiap.argus.dto.response.BiomaResponseDTO;
+import br.com.fiap.argus.exception.BusinessException;
 import br.com.fiap.argus.exception.ResourceNotFoundException;
 import br.com.fiap.argus.mapper.BiomaMapper;
 import br.com.fiap.argus.repository.BiomaRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BiomaService {
 
     private final BiomaRepository repository;
     private final BiomaMapper mapper;
-
-    public BiomaService(
-            BiomaRepository repository,
-            BiomaMapper mapper
-    ) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     public List<BiomaResponseDTO> listarTodos() {
         return repository.findAll()
@@ -32,44 +27,42 @@ public class BiomaService {
     }
 
     public BiomaResponseDTO buscarPorId(Long id) {
-        Bioma bioma = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Bioma não encontrado")
-                );
-
+        Bioma bioma = buscarBioma(id);
         return mapper.toResponse(bioma);
     }
 
     public BiomaResponseDTO cadastrar(BiomaRequestDTO dto) {
-        if (repository.existsByNomeIgnoreCase(dto.getNome())) {
-            throw new RuntimeException("Já existe um bioma com esse nome");
-        }
+        validarNomeDuplicado(dto.getNome());
 
-        Bioma entity = mapper.toEntity(dto);
+        Bioma bioma = mapper.toEntity(dto);
+        Bioma biomaSalvo = repository.save(bioma);
 
-        return mapper.toResponse(repository.save(entity));
+        return mapper.toResponse(biomaSalvo);
     }
 
-    public BiomaResponseDTO atualizar(
-            Long id,
-            BiomaRequestDTO dto
-    ) {
-        Bioma entity = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Bioma não encontrado")
-                );
+    public BiomaResponseDTO atualizar(Long id, BiomaRequestDTO dto) {
+        Bioma bioma = buscarBioma(id);
 
-        mapper.updateEntity(entity, dto);
+        mapper.updateEntity(bioma, dto);
 
-        return mapper.toResponse(repository.save(entity));
+        Bioma biomaAtualizado = repository.save(bioma);
+
+        return mapper.toResponse(biomaAtualizado);
     }
 
     public void deletar(Long id) {
-        Bioma entity = repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Bioma não encontrado")
-                );
+        Bioma bioma = buscarBioma(id);
+        repository.delete(bioma);
+    }
 
-        repository.delete(entity);
+    private Bioma buscarBioma(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bioma não encontrado com ID: " + id));
+    }
+
+    private void validarNomeDuplicado(String nome) {
+        if (repository.existsByNomeIgnoreCase(nome)) {
+            throw new BusinessException("Já existe um bioma com esse nome.");
+        }
     }
 }
