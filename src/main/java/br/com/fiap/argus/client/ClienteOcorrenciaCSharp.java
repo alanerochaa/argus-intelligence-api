@@ -6,23 +6,25 @@ import br.com.fiap.argus.dto.response.OcorrenciaCSharpResponseDTO;
 import br.com.fiap.argus.dto.response.RegistroCampoCSharpResponseDTO;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 @FeignClient(
         name = "ocorrencia-client",
-        url = "${csharp.api.url}",
+        url = "${csharp.api.url:[http://localhost:5215}](http://localhost:5215})",
         configuration = CSharpFeignConfig.class
 )
 public interface ClienteOcorrenciaCSharp {
+
 
     @GetMapping("/api/ocorrencias")
     List<OcorrenciaCSharpResponseDTO> listarOcorrencias();
 
     @GetMapping("/api/ocorrencias/{id}")
     OcorrenciaCSharpResponseDTO buscarOcorrenciaPorId(
-            @PathVariable Long id
+            @PathVariable("id") Long id
     );
 
     @GetMapping("/api/registroscampo")
@@ -30,6 +32,7 @@ public interface ClienteOcorrenciaCSharp {
 
     @GetMapping("/api/brigadistas/{id}")
     BrigadistaCSharpResponseDTO buscarBrigadista(
-            @PathVariable Long id
+            @PathVariable("id") Long id
     );
+
 }
