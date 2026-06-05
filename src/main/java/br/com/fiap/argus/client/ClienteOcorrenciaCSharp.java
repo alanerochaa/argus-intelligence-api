@@ -13,7 +13,7 @@ import java.util.List;
 
 @FeignClient(
         name = "ocorrencia-client",
-        url = "${csharp.api.url:[http://localhost:5215}](http://localhost:5215})",
+        url = "${csharp.api.url:http://localhost:5215}",
         configuration = CSharpFeignConfig.class
 )
 public interface ClienteOcorrenciaCSharp {
