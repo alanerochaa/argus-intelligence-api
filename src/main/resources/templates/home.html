@@ -11,13 +11,13 @@
           content="width=device-width, initial-scale=1">
 
     <meta name="description"
-          content="ARGUS Intelligence API - central técnica de monitoramento ambiental com Java, NASA FIRMS, IA, RabbitMQ, Oracle, .NET e Mobile.">
+          content="ARGUS Intelligence API - central técnica de monitoramento ambiental com Java, NASA FIRMS, IA, RabbitMQ, CloudAMQP, Oracle, .NET e Mobile.">
 
     <title>ARGUS Intelligence API</title>
 
     <link rel="icon"
-          type="image/png"
-          th:href="@{/favicon.png}">
+          type="image/x-icon"
+          th:href="@{/favicon.ico}">
 
     <link rel="preload"
           as="image"
@@ -97,9 +97,9 @@
 
                 <p>
                     O fluxo da solução conecta dados externos da NASA FIRMS,
-                    persistência em Oracle, publicação de eventos via RabbitMQ,
-                    apoio analítico por IA, operação em C#/.NET e consumo pelo
-                    aplicativo mobile dos brigadistas.
+                    persistência em Oracle, eventos assíncronos via RabbitMQ
+                    e CloudAMQP, apoio analítico por IA, operação em C#/.NET
+                    e consumo pelo aplicativo mobile dos brigadistas.
                 </p>
 
                 <div class="hero-tags">
@@ -108,6 +108,7 @@
                     <span class="hero-tag">Oracle</span>
                     <span class="hero-tag">NASA FIRMS</span>
                     <span class="hero-tag">RabbitMQ</span>
+                    <span class="hero-tag">CloudAMQP</span>
                     <span class="hero-tag">IA</span>
                     <span class="hero-tag">.NET</span>
                     <span class="hero-tag">Mobile</span>
@@ -130,122 +131,98 @@
 
         <div class="shortcut-grid">
 
-            <a
-                    th:href="@{/actuator/health}"
-                    class="shortcut-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir Health Check da aplicação">
+            <a th:href="@{/actuator/health}"
+               class="shortcut-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="shortcut-icon">
                     <i class="fa-solid fa-heart-pulse"></i>
                 </div>
 
                 <div class="shortcut-content">
-
                     <h2>Health Check</h2>
-
-                    <p>
-                        Verifica disponibilidade da API Java, banco, RabbitMQ
-                        e componentes monitorados pelo Actuator.
-                    </p>
-
+                    <p>Verifica disponibilidade da API Java, banco, RabbitMQ e componentes monitorados pelo Actuator.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/api/ingestao/status}"
-                    class="shortcut-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir status da integração NASA FIRMS">
+            <a th:href="@{/api/ingestao/status}"
+               class="shortcut-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="shortcut-icon">
                     <i class="fa-solid fa-satellite-dish"></i>
                 </div>
 
                 <div class="shortcut-content">
-
                     <h2>Status NASA FIRMS</h2>
-
-                    <p>
-                        Valida a integração externa responsável pelo consumo
-                        dos focos de calor monitorados por satélite.
-                    </p>
-
+                    <p>Valida a integração externa responsável pelo consumo dos focos de calor monitorados por satélite.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/api/ia/status}"
-                    class="shortcut-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir status da integração com IA">
+            <a th:href="@{/api/ia/status}"
+               class="shortcut-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="shortcut-icon">
                     <i class="fa-solid fa-brain"></i>
                 </div>
 
                 <div class="shortcut-content">
-
                     <h2>Status API IA</h2>
-
-                    <p>
-                        Verifica a camada analítica responsável por apoiar
-                        a classificação de risco e criticidade dos alertas.
-                    </p>
-
+                    <p>Verifica a camada analítica responsável por apoiar a classificação de risco e criticidade dos alertas.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/api/operations/status}"
-                    class="shortcut-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir status da integração Operations .NET">
+            <a th:href="@{/api/operations/status}"
+               class="shortcut-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="shortcut-icon">
                     <i class="fa-solid fa-network-wired"></i>
                 </div>
 
                 <div class="shortcut-content">
-
                     <h2>Status Operations .NET</h2>
-
-                    <p>
-                        Valida a integração com a API operacional responsável
-                        por ocorrências, brigadas, recursos e atuação em campo.
-                    </p>
-
+                    <p>Valida a integração com a API operacional responsável por ocorrências, brigadas e recursos.</p>
                 </div>
 
             </a>
 
-            <a
-                    href="#"
-                    class="shortcut-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir aplicativo mobile ARGUS">
+            <a th:href="@{/actuator/health}"
+               class="shortcut-card"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                <div class="shortcut-icon">
+                    <i class="fa-solid fa-wave-square"></i>
+                </div>
+
+                <div class="shortcut-content">
+                    <h2>Mensageria</h2>
+                    <p>RabbitMQ local no desenvolvimento e CloudAMQP como broker gerenciado no ambiente cloud.</p>
+                </div>
+
+            </a>
+
+            <a href="#"
+               class="shortcut-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="shortcut-icon">
                     <i class="fa-solid fa-mobile-screen-button"></i>
                 </div>
 
                 <div class="shortcut-content">
-
                     <h2>Mobile ARGUS</h2>
-
-                    <p>
-                        Interface de campo para brigadistas acompanharem
-                        alertas, ocorrências e resposta operacional.
-                    </p>
-
+                    <p>Interface de campo para brigadistas acompanharem alertas, ocorrências e resposta operacional.</p>
                 </div>
 
             </a>
@@ -256,80 +233,56 @@
 
     <section class="dashboard-section">
 
-        <span class="section-label">
-            Documentação técnica
-        </span>
+    <span class="section-label">
+        Documentação técnica
+    </span>
 
         <div class="admin-grid">
 
-            <a
-                    th:href="@{/swagger-ui.html}"
-                    class="admin-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir documentação Swagger">
+            <a th:href="@{/swagger-ui.html}"
+               class="admin-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="admin-card-icon">
                     <i class="fa-solid fa-book"></i>
                 </div>
 
                 <div class="admin-card-content">
-
                     <h3>Swagger</h3>
-
-                    <p>
-                        Interface interativa para testar endpoints, validar
-                        contratos e demonstrar o comportamento da API.
-                    </p>
-
+                    <p>Interface interativa para testar endpoints, validar contratos e demonstrar o comportamento da API.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/v3/api-docs}"
-                    class="admin-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir contrato OpenAPI JSON">
+            <a th:href="@{/v3/api-docs}"
+               class="admin-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="admin-card-icon">
                     <i class="fa-solid fa-code"></i>
                 </div>
 
                 <div class="admin-card-content">
-
                     <h3>OpenAPI JSON</h3>
-
-                    <p>
-                        Contrato técnico padronizado dos recursos REST
-                        expostos pela ARGUS Intelligence API.
-                    </p>
-
+                    <p>Contrato técnico padronizado dos recursos REST expostos pela ARGUS Intelligence API.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/actuator}"
-                    class="admin-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir endpoints do Actuator">
+            <a th:href="@{/actuator}"
+               class="admin-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="admin-card-icon">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
 
                 <div class="admin-card-content">
-
                     <h3>Actuator</h3>
-
-                    <p>
-                        Monitoramento técnico da aplicação, health checks
-                        e indicadores operacionais da API.
-                    </p>
-
+                    <p>Monitoramento técnico da aplicação, health checks e indicadores operacionais da API.</p>
                 </div>
 
             </a>
@@ -340,104 +293,72 @@
 
     <section class="dashboard-section">
 
-        <span class="section-label">
-            Domínios de negócio ARGUS
-        </span>
+    <span class="section-label">
+        Domínios de negócio ARGUS
+    </span>
 
         <div class="admin-grid">
 
-            <a
-                    th:href="@{/api/alertas}"
-                    class="admin-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir domínio de alertas">
+            <a th:href="@{/api/alertas}"
+               class="admin-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="admin-card-icon">
                     <i class="fa-solid fa-triangle-exclamation"></i>
                 </div>
 
                 <div class="admin-card-content">
-
                     <h3>Alertas</h3>
-
-                    <p>
-                        Eventos de risco gerados a partir dos focos de calor
-                        e utilizados para resposta operacional.
-                    </p>
-
+                    <p>Eventos de risco gerados a partir dos focos de calor e utilizados para resposta operacional.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/api/biomas}"
-                    class="admin-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir domínio de biomas">
+            <a th:href="@{/api/biomas}"
+               class="admin-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="admin-card-icon">
                     <i class="fa-solid fa-tree"></i>
                 </div>
 
                 <div class="admin-card-content">
-
                     <h3>Biomas</h3>
-
-                    <p>
-                        Cadastro ambiental base para segmentação territorial
-                        e análise de risco por região monitorada.
-                    </p>
-
+                    <p>Cadastro ambiental base para segmentação territorial e análise de risco por região monitorada.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/api/regioes}"
-                    class="admin-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir domínio de regiões">
+            <a th:href="@{/api/regioes}"
+               class="admin-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="admin-card-icon">
                     <i class="fa-solid fa-map-location-dot"></i>
                 </div>
 
                 <div class="admin-card-content">
-
                     <h3>Regiões</h3>
-
-                    <p>
-                        Áreas monitoradas vinculadas aos biomas e utilizadas
-                        na consolidação dos alertas ambientais.
-                    </p>
-
+                    <p>Áreas monitoradas vinculadas aos biomas e utilizadas na consolidação dos alertas ambientais.</p>
                 </div>
 
             </a>
 
-            <a
-                    th:href="@{/api/focos}"
-                    class="admin-card"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Abrir domínio de focos de calor">
+            <a th:href="@{/api/focos}"
+               class="admin-card"
+               target="_blank"
+               rel="noopener noreferrer">
 
                 <div class="admin-card-icon">
                     <i class="fa-solid fa-fire"></i>
                 </div>
 
                 <div class="admin-card-content">
-
                     <h3>Focos de Calor</h3>
-
-                    <p>
-                        Pontos de calor detectados, registrados e utilizados
-                        como insumo para geração de alertas.
-                    </p>
-
+                    <p>Pontos de calor detectados, registrados e utilizados como insumo para geração de alertas.</p>
                 </div>
 
             </a>
