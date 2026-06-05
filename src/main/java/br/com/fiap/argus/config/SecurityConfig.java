@@ -1,7 +1,7 @@
 package br.com.fiap.argus.config;
 
-import br.com.fiap.argus.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,13 +11,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 
 import org.springframework.security.web.SecurityFilterChain;
 
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -28,7 +24,9 @@ public class SecurityConfig {
 
         http
 
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf ->
+                        csrf.disable()
+                )
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
@@ -38,7 +36,6 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // LIBERADOS
                         .requestMatchers(
 
                                 "/",
@@ -50,29 +47,14 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
 
-                                "/actuator/health",
-
-                                "/api/auth/**"
-
-                        ).permitAll()
-
-                        // PROTEGIDOS
-                        .requestMatchers(
+                                "/actuator/**",
 
                                 "/api/**"
 
-                        ).authenticated()
+                        ).permitAll()
 
                         .anyRequest()
-                        .authenticated()
-
-                )
-
-                .addFilterBefore(
-
-                        jwtAuthenticationFilter,
-
-                        UsernamePasswordAuthenticationFilter.class
+                        .permitAll()
 
                 )
 
