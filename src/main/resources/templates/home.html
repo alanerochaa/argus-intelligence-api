@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ARGUS Intelligence API</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/styles.css}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+<body class="argus-body">
+
+<header class="dashboard-header">
+
+    <div class="dashboard-header-content">
+
+        <div class="dashboard-user-block">
+
+            <span class="welcome-text">
+                ARGUS Intelligence API
+            </span>
+
+            <h1>
+                Central técnica de monitoramento ambiental
+            </h1>
+
+            <p class="dashboard-subtitle">
+                Serviço REST responsável pela ingestão de dados ambientais,
+                geração de alertas, integração com IA, mensageria e exposição
+                de endpoints técnicos.
+            </p>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main class="dashboard-container">
+
+    <section class="dashboard-section">
+
+        <span class="section-label">
+            Sobre a API
+        </span>
+
+        <div class="hero-panel">
+
+            <div class="hero-brand">
+
+                <div class="hero-logo-wrapper">
+
+                    <img
+                            class="hero-logo"
+                            th:src="@{/images/argus-logo.png}"
+                            alt="ARGUS Logo">
+
+                </div>
+
+            </div>
+            <div class="hero-text">
+
+                <h2>
+                    ARGUS Intelligence API
+                </h2>
+
+                <p>
+                    Microserviço Java responsável por gerenciar biomas,
+                    regiões, focos de calor e alertas operacionais.
+                </p>
+
+                <p>
+                    Consome dados da NASA FIRMS, persiste no Oracle,
+                    publica eventos via RabbitMQ e integra IA para
+                    apoio à análise ambiental.
+                </p>
+
+                <div class="hero-tags">
+
+                    <span class="hero-tag">Spring Boot</span>
+                    <span class="hero-tag">Oracle</span>
+                    <span class="hero-tag">NASA FIRMS</span>
+                    <span class="hero-tag">RabbitMQ</span>
+                    <span class="hero-tag">OpenAPI</span>
+                    <span class="hero-tag">Azure</span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section">
+
+        <span class="section-label">
+            Endpoints públicos
+        </span>
+
+        <div class="shortcut-grid">
+
+            <a th:href="@{/actuator/health}"
+               class="shortcut-card"
+               target="_blank">
+
+                <div class="shortcut-icon">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+
+                <div class="shortcut-content">
+
+                    <h2>Health Check</h2>
+
+                    <p>
+                        Verificação da disponibilidade da aplicação.
+                    </p>
+
+                </div>
+
+            </a>
+
+            <a th:href="@{/api/ingestao/sync/24h}"
+               class="shortcut-card"
+               target="_blank">
+
+                <div class="shortcut-icon">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+
+                <div class="shortcut-content">
+
+                    <h2>Sincronização NASA FIRMS</h2>
+
+                    <p>
+                        Executa ingestão manual dos focos de calor.
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section">
+
+        <span class="section-label">
+            Documentação e monitoramento
+        </span>
+
+        <div class="admin-grid">
+
+            <a th:href="@{/swagger-ui.html}"
+               class="admin-card"
+               target="_blank">
+
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-book"></i>
+                </div>
+
+                <div class="admin-card-content">
+
+                    <h3>Swagger</h3>
+
+                    <p>
+                        Documentação interativa dos endpoints.
+                    </p>
+
+                </div>
+
+            </a>
+
+            <a th:href="@{/v3/api-docs}"
+               class="admin-card"
+               target="_blank">
+
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+
+                <div class="admin-card-content">
+
+                    <h3>OpenAPI JSON</h3>
+
+                    <p>
+                        Contrato técnico da API.
+                    </p>
+
+                </div>
+
+            </a>
+
+            <a th:href="@{/api/alertas}"
+               class="admin-card"
+               target="_blank">
+
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+
+                <div class="admin-card-content">
+
+                    <h3>Alertas</h3>
+
+                    <p>
+                        Consulta dos alertas monitorados.
+                    </p>
+
+                </div>
+
+            </a>
+
+            <a th:href="@{/api/operations/ocorrencias}"
+               class="admin-card"
+               target="_blank">
+
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-network-wired"></i>
+                </div>
+
+                <div class="admin-card-content">
+
+                    <h3>Integração Operations .NET</h3>
+
+                    <p>
+                        Endpoint reservado para integração futura.
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
+
+</html>

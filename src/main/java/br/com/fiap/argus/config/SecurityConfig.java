@@ -18,12 +18,15 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/",
+                                "/css/**",
+                                "/images/**",
+                                "/js/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/actuator/**",
-                                "/api/**",
-                                "/RabbitMQ/**"
+                                "/api/**"
                         ).permitAll()
 
                         .anyRequest().permitAll()
