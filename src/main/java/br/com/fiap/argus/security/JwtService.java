@@ -1,47 +1,46 @@
 package br.com.fiap.argus.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 
 @Service
 public class JwtService {
 
-    private static final Long EXPIRATION = 86400000L;
-
-    public String gerarToken(String username) {
-        String payload = username + ":" + (System.currentTimeMillis() + EXPIRATION);
-
-        return Base64.getEncoder()
-                .encodeToString(payload.getBytes());
-    }
-
-    public String extrairUsuario(String token) {
-        String decoded = new String(
-                Base64.getDecoder().decode(token)
-        );
-
-        return decoded.split(":")[0];
-    }
+    @Value("${jwt.secret}")
+    private String secret;
 
     public boolean validar(String token) {
         try {
-            String decoded = new String(
-                    Base64.getDecoder().decode(token)
-            );
-
-            String[] parts = decoded.split(":");
-
-            if (parts.length < 2) {
-                return false;
-            }
-
-            long expiration = Long.parseLong(parts[1]);
-
-            return expiration > System.currentTimeMillis();
-
+            extrairClaims(token);
+            return true;
         } catch (Exception ex) {
             return false;
         }
+    }
+
+    public String extrairUsuario(String token) {
+        return extrairClaims(token)
+                .getSubject();
+    }
+
+    private Claims extrairClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    private SecretKey getKey() {
+        return Keys.hmacShaKeyFor(
+                secret.getBytes(StandardCharsets.UTF_8)
+        );
     }
 }
