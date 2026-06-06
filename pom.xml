@@ -93,6 +93,12 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- HATEOAS -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+		</dependency>
+
 		<!-- FEIGN -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -159,6 +165,8 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
 
 	</dependencies>
 

@@ -1,6 +1,6 @@
 package br.com.fiap.argus.messaging;
 
-import br.com.fiap.argus.dto.response.AlertaResponseDTO;
+import br.com.fiap.argus.dto.messaging.AlertaMensagemDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
@@ -12,49 +12,20 @@ public class ProdutorAlerta {
     private final RabbitTemplate rabbitTemplate;
 
     public void enviarAlerta(
-            AlertaResponseDTO alerta
+            AlertaMensagemDTO alerta
     ) {
-
-        String mensagem =
-                """
-                =====================================
-                 ALERTA AMBIENTAL - ARGUS
-                =====================================
-
-                ID................: %d
-                TÍTULO............: %s
-                NÍVEL.............: %s
-                STATUS............: %s
-                SCORE DE RISCO....: %.1f
-
-                RECOMENDAÇÃO:
-                %s
-
-                FOCO DE CALOR.....: %d
-
-                =====================================
-                """
-                        .formatted(
-                                alerta.id(),
-                                alerta.titulo(),
-                                alerta.nivel(),
-                                alerta.status(),
-                                alerta.scoreRisco(),
-                                alerta.recomendacaoOperacional(),
-                                alerta.focoCalorId()
-                        );
 
         rabbitTemplate.convertAndSend(
                 MessagingConfig.FILA_ALERTAS,
-                mensagem
+                alerta
         );
 
         System.out.println(
-                "\n Mensagem enviada para RabbitMQ:"
+                "\n ALERTA ENVIADO PARA RABBITMQ"
         );
 
         System.out.println(
-                mensagem
+                alerta
         );
     }
 

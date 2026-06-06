@@ -2,6 +2,8 @@ package br.com.fiap.argus.service;
 
 import br.com.fiap.argus.domain.Alerta;
 import br.com.fiap.argus.domain.FocoCalor;
+import br.com.fiap.argus.domain.Regiao;
+import br.com.fiap.argus.dto.messaging.AlertaMensagemDTO;
 import br.com.fiap.argus.dto.request.AlertaRequestDTO;
 import br.com.fiap.argus.dto.response.AlertaResponseDTO;
 import br.com.fiap.argus.exception.ResourceNotFoundException;
@@ -9,9 +11,7 @@ import br.com.fiap.argus.mapper.AlertaMapper;
 import br.com.fiap.argus.messaging.ProdutorAlerta;
 import br.com.fiap.argus.repository.AlertaRepository;
 import br.com.fiap.argus.repository.FocoCalorRepository;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +32,11 @@ public class AlertaService {
 
         AlertaResponseDTO response = AlertaMapper.toResponse(alertaSalvo);
 
-        produtorAlerta.enviarAlerta(response);
+        AlertaMensagemDTO mensagem = montarMensagemAlerta(alertaSalvo);
+
+        if (devePublicarNaFila(alertaSalvo)) {
+            produtorAlerta.enviarAlerta(mensagem);
+        }
 
         return response;
     }
@@ -63,6 +67,40 @@ public class AlertaService {
     public void remover(Long id) {
         Alerta alerta = buscarAlerta(id);
         alertaRepository.delete(alerta);
+    }
+
+    private AlertaMensagemDTO montarMensagemAlerta(Alerta alerta) {
+        FocoCalor focoCalor = alerta.getFocoCalor();
+        Regiao regiao = focoCalor.getRegiao();
+
+        return new AlertaMensagemDTO(
+                alerta.getId(),
+                alerta.getTitulo(),
+                alerta.getDescricao(),
+                alerta.getNivel(),
+                alerta.getStatus(),
+                alerta.getScoreRisco(),
+                alerta.getRecomendacaoOperacional(),
+                alerta.getDataGeracao(),
+
+                focoCalor.getId(),
+                focoCalor.getLatitude(),
+                focoCalor.getLongitude(),
+                focoCalor.getFrp(),
+                focoCalor.getTemperaturaEstimada(),
+                focoCalor.getConfianca(),
+                focoCalor.getSatelite(),
+                focoCalor.getSensor(),
+
+                regiao.getId(),
+                regiao.getNome(),
+                regiao.getNivelRisco()
+        );
+    }
+
+    private boolean devePublicarNaFila(Alerta alerta) {
+        return "ALTO".equalsIgnoreCase(alerta.getNivel())
+                || "CRITICO".equalsIgnoreCase(alerta.getNivel());
     }
 
     private Alerta buscarAlerta(Long id) {

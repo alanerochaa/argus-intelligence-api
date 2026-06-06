@@ -9,83 +9,80 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/riscos")
 @RequiredArgsConstructor
-@Tag(
-        name = "Domínio ARGUS -RISCO",
-        description = "Análise de risco ambiental por região monitorada."
-)
+@Tag(name = "Domínio ARGUS - RISCO", description = "Análise de risco ambiental por região monitorada.")
 public class RiscoController {
 
     private final RegiaoRepository regiaoRepository;
     private final FocoCalorRepository focoCalorRepository;
     private final ClienteWeather clienteWeather;
 
+    @GetMapping
+    @Operation(summary = "Listar risco de todas as regiões")
+    public ResponseEntity<List<RiscoResponseDTO>> listarRiscos() {
+        return ResponseEntity.ok(
+                regiaoRepository.findAll()
+                        .stream()
+                        .map(this::montarRisco)
+                        .toList()
+        );
+    }
+
     @GetMapping("/regioes/{id}")
     @Operation(summary = "Calcular risco da região")
-    public ResponseEntity<RiscoResponseDTO> calcularRiscoRegiao(
-            @PathVariable Long id
-    ) {
+    public ResponseEntity<EntityModel<RiscoResponseDTO>> calcularRiscoRegiao(@PathVariable Long id) {
         Regiao regiao = regiaoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Região não encontrada."));
 
-        long quantidadeFocos = focoCalorRepository.countByRegiaoId(id);
-
-        double score = calcularScore(
-                regiao.getNivelRisco(),
-                quantidadeFocos
-        );
-
-        String clima = null;
-
-        if (
-                regiao.getLatitudeCentral() != null &&
-                        regiao.getLongitudeCentral() != null
-        ) {
-            clima = clienteWeather.buscarClima(
-                    regiao.getLatitudeCentral(),
-                    regiao.getLongitudeCentral()
-            );
-        }
-
         return ResponseEntity.ok(
-                new RiscoResponseDTO(
-                        regiao.getId(),
-                        regiao.getNome(),
-                        regiao.getEstado(),
-                        regiao.getNivelRisco(),
-                        quantidadeFocos,
-                        score,
-                        clima == null
-                                ? "Clima não disponível para esta região."
-                                : clima
+                EntityModel.of(
+                        montarRisco(regiao),
+                        linkTo(methodOn(RiscoController.class).calcularRiscoRegiao(id)).withSelfRel(),
+                        linkTo(methodOn(RegiaoController.class).buscarPorId(id)).withRel("regiao")
                 )
         );
     }
 
-    private double calcularScore(
-            String nivelRisco,
-            long quantidadeFocos
-    ) {
+    private RiscoResponseDTO montarRisco(Regiao regiao) {
+        long quantidadeFocos = focoCalorRepository.countByRegiaoId(regiao.getId());
+
+        return new RiscoResponseDTO(
+                regiao.getId(),
+                regiao.getNome(),
+                regiao.getEstado(),
+                regiao.getNivelRisco(),
+                quantidadeFocos,
+                calcularScore(regiao.getNivelRisco(), quantidadeFocos),
+                buscarClima(regiao)
+        );
+    }
+
+    private String buscarClima(Regiao regiao) {
+        if (regiao.getLatitudeCentral() == null || regiao.getLongitudeCentral() == null) {
+            return "Clima não disponível para esta região.";
+        }
+
+        return clienteWeather.buscarClima(regiao.getLatitudeCentral(), regiao.getLongitudeCentral());
+    }
+
+    private double calcularScore(String nivelRisco, long quantidadeFocos) {
         double scoreBase = switch (nivelRisco) {
-            case "MEDIO" -> 35.0;
-            case "ALTO" -> 65.0;
-            case "CRITICO" -> 85.0;
-            default -> 15.0;
+            case "MEDIO" -> 35;
+            case "ALTO" -> 65;
+            case "CRITICO" -> 85;
+            default -> 15;
         };
 
-        double incrementoPorFoco = Math.min(
-                quantidadeFocos * 5.0,
-                15.0
-        );
-
-        return Math.min(
-                scoreBase + incrementoPorFoco,
-                100.0
-        );
+        return Math.min(scoreBase + Math.min(quantidadeFocos * 5, 15), 100);
     }
 }

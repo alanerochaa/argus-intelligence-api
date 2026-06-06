@@ -1,30 +1,39 @@
 package br.com.fiap.argus.dto.response;
 
+import lombok.*;
+
+import org.springframework.hateoas.RepresentationModel;
+
 import java.time.LocalDateTime;
 
-public record RegiaoResponseDTO(
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RegiaoResponseDTO
+        extends RepresentationModel<RegiaoResponseDTO> {
 
-        Long id,
+    private Long id;
 
-        String nome,
+    private String nome;
 
-        String estado,
+    private String estado;
 
-        String cidadeReferencia,
+    private String cidadeReferencia;
 
-        Double latitudeCentral,
+    private Double latitudeCentral;
 
-        Double longitudeCentral,
+    private Double longitudeCentral;
 
-        String nivelRisco,
+    private String nivelRisco;
 
-        String statusMonitoramento,
+    private String statusMonitoramento;
 
-        LocalDateTime dataCriacao,
+    private LocalDateTime dataCriacao;
 
-        LocalDateTime dataAtualizacao,
+    private LocalDateTime dataAtualizacao;
 
-        Long biomaId
+    private Long biomaId;
 
-) {
 }
