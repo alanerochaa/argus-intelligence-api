@@ -22,9 +22,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        )
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
                 .authorizeHttpRequests(auth -> auth
@@ -46,9 +44,14 @@ public class SecurityConfig {
 
                                 "/api/auth/**",
 
-                                // DEMO / GS
+                                // DEMO / GS - endpoints públicos para validação
                                 "/api/ingestao/**",
-                                "/api/riscos/**"
+                                "/api/riscos/**",
+                                "/api/ia/**",
+                                "/api/chatbot/**",
+                                "/api/inteligencia/**",
+                                "/api/nasa/**",
+                                "/api/weather/**"
                         ).permitAll()
 
                         // CRUD protegido
@@ -59,11 +62,9 @@ public class SecurityConfig {
                                 "/api/alertas/**"
                         ).authenticated()
 
-                        .requestMatchers("/api/**")
-                        .authenticated()
+                        .requestMatchers("/api/**").authenticated()
 
-                        .anyRequest()
-                        .permitAll()
+                        .anyRequest().permitAll()
                 )
 
                 .addFilterBefore(
@@ -72,7 +73,6 @@ public class SecurityConfig {
                 )
 
                 .httpBasic(httpBasic -> httpBasic.disable())
-
                 .formLogin(form -> form.disable());
 
         return http.build();
