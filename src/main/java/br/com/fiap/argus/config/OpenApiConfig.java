@@ -37,33 +37,17 @@ public class OpenApiConfig {
 
                                 .description(
                                         """
-                                        # Inteligência Ambiental
+                                        Plataforma de monitoramento ambiental e suporte operacional baseada em dados espaciais.
                                         
-                                        Plataforma responsável pelo monitoramento ambiental,
-                                        análise territorial e suporte operacional utilizando dados espaciais.
+                                        🔐 Endpoints protegidos utilizam JWT.
                                         
-                                        ---
-                                        
-                                        ## 🌎 Objetivo
-                                        
-                                        Centralizar informações ambientais e apoiar a tomada de decisão
-                                        através de monitoramento contínuo e integração entre serviços.
-                                        
-                                        ---
-                                        
-                                        ## 🔐 Segurança
-                                        
-                                        Autenticação centralizada via JWT.
-                                        
-                                        Para testar endpoints protegidos:
-                                        
-                                        1. Clique em **Authorize**
-                                        2. Informe:
+                                        Para testar:
+                                        1. Faça login em /api/auth/login
+                                        2. Copie o token retornado
+                                        3. Clique em Authorize
+                                        4. Informe:
                                         
                                         Bearer SEU_TOKEN
-                                        
-                                        3. Execute normalmente.
-                                        
                                         """
                                 )
 
