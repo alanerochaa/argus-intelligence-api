@@ -22,14 +22,17 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
                 )
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // Rotas públicas
+                        // Públicos
                         .requestMatchers(
                                 "/",
+
                                 "/css/**",
                                 "/images/**",
                                 "/js/**",
@@ -39,26 +42,28 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
 
-                                "/actuator/health",
+                                "/actuator/**",
 
-                                "/api/auth/**"
+                                "/api/auth/**",
+
+                                // DEMO / GS
+                                "/api/ingestao/**",
+                                "/api/riscos/**"
                         ).permitAll()
 
-                        // Rotas protegidas do domínio ARGUS
+                        // CRUD protegido
                         .requestMatchers(
                                 "/api/biomas/**",
                                 "/api/regioes/**",
                                 "/api/focos/**",
-                                "/api/alertas/**",
-                                "/api/ingestao/**",
-                                "/api/riscos/**"
+                                "/api/alertas/**"
                         ).authenticated()
 
-                        // Qualquer outra rota da API também exige token
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/**")
+                        .authenticated()
 
-                        // Home, páginas estáticas e fallback
-                        .anyRequest().permitAll()
+                        .anyRequest()
+                        .permitAll()
                 )
 
                 .addFilterBefore(
@@ -67,6 +72,7 @@ public class SecurityConfig {
                 )
 
                 .httpBasic(httpBasic -> httpBasic.disable())
+
                 .formLogin(form -> form.disable());
 
         return http.build();
