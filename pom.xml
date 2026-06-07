@@ -19,16 +19,13 @@
 	<groupId>br.com.fiap</groupId>
 	<artifactId>argus-intelligence-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
 	<name>argus-intelligence-api</name>
-
-	<description>
-		API REST da solução Argus Intelligence
-	</description>
+	<description>API REST da solução Argus Intelligence</description>
 
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2025.0.2</spring-cloud.version>
+		<spring-ai.version>1.0.0</spring-ai.version>
 		<lombok.version>1.18.38</lombok.version>
 		<jjwt.version>0.12.6</jjwt.version>
 	</properties>
@@ -99,6 +96,12 @@
 			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
 
+		<!-- SPRING AI -->
+		<dependency>
+			<groupId>org.springframework.ai</groupId>
+			<artifactId>spring-ai-starter-model-openai</artifactId>
+		</dependency>
+
 		<!-- FEIGN -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -166,12 +169,9 @@
 			<scope>test</scope>
 		</dependency>
 
-
-
 	</dependencies>
 
 	<dependencyManagement>
-
 		<dependencies>
 
 			<dependency>
@@ -182,12 +182,18 @@
 				<scope>import</scope>
 			</dependency>
 
-		</dependencies>
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-bom</artifactId>
+				<version>${spring-ai.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
 
+		</dependencies>
 	</dependencyManagement>
 
 	<build>
-
 		<plugins>
 
 			<plugin>
@@ -199,16 +205,13 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.13.0</version>
-
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
-
 			</plugin>
 
 		</plugins>
-
 	</build>
 
 </project>
