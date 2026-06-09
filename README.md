@@ -1204,9 +1204,13 @@ Evidências demonstradas:
 
 ## 🌐 CORS
 
-Foi realizada configuração de CORS para permitir comunicação segura entre clientes externos e os serviços do ecossistema ARGUS.
+A aplicação possui configuração de CORS para permitir o consumo da API por clientes externos do ecossistema ARGUS, como aplicações web, mobile e microsserviços integrados.
 
-Essa configuração possibilita integração entre aplicações web, APIs distribuídas e consumidores autorizados sem comprometer o controle de acesso.
+A configuração foi externalizada via `application.properties`, permitindo ajustar as origens autorizadas conforme o ambiente de execução.
+
+Métodos liberados:
+
+GET, POST, PUT, DELETE, PATCH e OPTIONS.
 ---
 
 # 👩‍💻 Integrantes e Responsabilidades
