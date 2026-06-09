@@ -80,9 +80,11 @@ public class AlertaController {
 
     @PostMapping
     @Operation(
-            summary = "Cadastrar alerta",
+            summary = "Cadastrar alerta manualmente",
             description = """
-            Cria um novo alerta ambiental no ARGUS.
+            Cria um novo alerta ambiental no ARGUS a partir de um payload informado pelo usuário.
+
+            Esse fluxo representa o cadastro operacional/manual de alertas.
 
             Para validar a mensageria com RabbitMQ, use nível ALTO ou CRITICO.
             Exemplo de payload:
@@ -106,6 +108,34 @@ public class AlertaController {
 
         AlertaResponseDTO alerta =
                 service.criar(dto);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(
+                        adicionarLinks(alerta)
+                );
+    }
+
+    @PostMapping("/gerar/{focoCalorId}")
+    @Operation(
+            summary = "Gerar alerta automaticamente a partir de um foco de calor",
+            description = """
+            Gera um alerta automaticamente usando apenas o ID de um foco de calor já cadastrado.
+
+            Nesse fluxo, o usuário não envia o alerta pronto.
+            A API busca os dados ambientais do foco de calor, aplica a regra/análise de risco,
+            cria o alerta, persiste no Oracle e publica na fila RabbitMQ quando aplicável.
+
+            Exemplo:
+            POST /api/alertas/gerar/1
+            """
+    )
+    public ResponseEntity<EntityModel<AlertaResponseDTO>> gerarAutomaticamente(
+            @PathVariable Long focoCalorId
+    ) {
+
+        AlertaResponseDTO alerta =
+                service.gerarAutomaticamente(focoCalorId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -178,7 +208,14 @@ public class AlertaController {
                 linkTo(
                         methodOn(AlertaController.class)
                                 .criar(null)
-                ).withRel("criar-alerta")
+                ).withRel("criar-alerta-manual")
+        );
+
+        model.add(
+                linkTo(
+                        methodOn(AlertaController.class)
+                                .gerarAutomaticamente(alerta.focoCalorId())
+                ).withRel("gerar-alerta-automatico")
         );
 
         model.add(

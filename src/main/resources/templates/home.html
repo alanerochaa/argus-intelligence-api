@@ -85,9 +85,7 @@ Visão executiva
 
             <div class="hero-text">
 
-                <h2>
-                    ARGUS Intelligence API
-                </h2>
+                <h2>ARGUS Intelligence API</h2>
 
                 <p>
                     Camada de inteligência ambiental do ecossistema ARGUS,
@@ -123,7 +121,6 @@ Visão executiva
 
     </section>
 
-
     <section class="dashboard-section">
 
 <span class="section-label">
@@ -153,7 +150,6 @@ Hub operacional da arquitetura
 
             </a>
 
-
             <a th:href="@{/api/ingestao/status}"
                class="shortcut-card"
                target="_blank">
@@ -175,7 +171,6 @@ Hub operacional da arquitetura
 
             </a>
 
-
             <a href="https://argus-ia-spring-eddyerg5dkdqbhba.brazilsouth-01.azurewebsites.net/"
                class="shortcut-card"
                target="_blank">
@@ -189,16 +184,14 @@ Hub operacional da arquitetura
                     <h2>ARGUS IA</h2>
 
                     <p>
-                        Abre diretamente a API de IA
-                        publicada em Azure responsável
-                        pela classificação e análise
+                        API responsável pela classificação,
+                        análise e recomendação
                         de risco ambiental.
                     </p>
 
                 </div>
 
             </a>
-
 
             <a href="https://argus-operations-rm559561.azurewebsites.net/"
                class="shortcut-card"
@@ -222,7 +215,6 @@ Hub operacional da arquitetura
 
             </a>
 
-
             <a th:href="@{/actuator/health}"
                class="shortcut-card"
                target="_blank">
@@ -244,9 +236,9 @@ Hub operacional da arquitetura
 
             </a>
 
-
-            <a href="#"
-               class="shortcut-card">
+            <a href="https://github.com/annabonfim/argus-app"
+               class="shortcut-card"
+               target="_blank">
 
                 <div class="shortcut-icon">
                     <i class="fa-solid fa-mobile-screen-button"></i>
@@ -258,7 +250,8 @@ Hub operacional da arquitetura
 
                     <p>
                         Aplicativo operacional para
-                        brigadistas em campo.
+                        acompanhamento dos alertas
+                        em campo.
                     </p>
 
                 </div>
@@ -268,7 +261,6 @@ Hub operacional da arquitetura
         </div>
 
     </section>
-
 
     <section class="dashboard-section">
 
@@ -290,14 +282,11 @@ Documentação técnica
 
                     <h3>Swagger</h3>
 
-                    <p>
-                        Testes e exploração dos endpoints.
-                    </p>
+                    <p>Testes e exploração dos endpoints.</p>
 
                 </div>
 
             </a>
-
 
             <a th:href="@{/v3/api-docs}"
                class="admin-card"
@@ -311,14 +300,11 @@ Documentação técnica
 
                     <h3>OpenAPI JSON</h3>
 
-                    <p>
-                        Contrato REST padronizado.
-                    </p>
+                    <p>Contrato REST padronizado.</p>
 
                 </div>
 
             </a>
-
 
             <a th:href="@{/actuator}"
                class="admin-card"
@@ -332,13 +318,67 @@ Documentação técnica
 
                     <h3>Actuator</h3>
 
-                    <p>
-                        Monitoramento técnico.
-                    </p>
+                    <p>Monitoramento técnico.</p>
 
                 </div>
 
             </a>
+
+        </div>
+
+    </section>
+
+    <section class="dashboard-section">
+
+<span class="section-label">
+Domínio Java
+</span>
+
+        <div class="admin-grid">
+
+            <div class="admin-card">
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+
+                <div class="admin-card-content">
+                    <h3>Bioma</h3>
+                    <p>Monitoramento ambiental e criticidade operacional.</p>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                </div>
+
+                <div class="admin-card-content">
+                    <h3>Região</h3>
+                    <p>Representação geográfica das áreas monitoradas.</p>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-fire"></i>
+                </div>
+
+                <div class="admin-card-content">
+                    <h3>Foco de Calor</h3>
+                    <p>Dados ambientais consumidos e processados.</p>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+
+                <div class="admin-card-content">
+                    <h3>Alerta</h3>
+                    <p>Classificação e geração dos alertas ambientais.</p>
+                </div>
+            </div>
 
         </div>
 
@@ -349,3 +389,4 @@ Documentação técnica
 </body>
 
 </html>
+```

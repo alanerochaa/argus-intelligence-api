@@ -191,63 +191,7 @@ Complementando o ecossistema, a **API de Inteligência Artificial** apoia o proc
 
 A arquitetura contempla integração com serviços externos, comunicação assíncrona por mensageria, persistência relacional em Oracle Database e deploy em ambiente cloud utilizando Microsoft Azure com pipeline automatizada via GitHub Actions.
 
-```text
-                                         ┌─────────────────────────────┐
-                                         │      Microsoft Azure        │
-                                         │    App Service + CI/CD      │
-                                         └─────────────┬───────────────┘
-                                                       │
-
-       ┌───────────────────────────────────────────────┼──────────────────────────────────────────────┐
-       │                                               │                                              │
-
-┌──────────────────────┐               ┌────────────────────────┐               ┌──────────────────────┐
-│    NASA FIRMS API    │               │      Weather API       │               │      API IA          │
-│ Dados Satelitais     │──────────────▶│ Dados Climáticos       │──────────────▶│ Inteligência         │
-└──────────────────────┘               └────────────────────────┘               └──────────┬──────────┘
-                                                                                             │
-                                                                                             ▼
-
-                           ┌──────────────────────────────────────────────┐
-                           │     ARGUS Intelligence API (Java)            │
-                           │----------------------------------------------│
-                           │ BIOMA                                        │
-                           │ REGIAO                                       │
-                           │ FOCO_CALOR                                   │
-                           │ ALERTA                                       │
-                           │ Análise de Risco                             │
-                           │ Integrações                                  │
-                           │ Swagger / OpenAPI                            │
-                           └──────────────────┬───────────────────────────┘
-                                              │
-
-                                   RabbitMQ / CloudAMQP
-
-                                              │
-
-                           ┌──────────────────▼───────────────────────────┐
-                           │       ARGUS Operations API (.NET)            │
-                           │----------------------------------------------│
-                           │ USUARIO                                      │
-                           │ BRIGADA                                      │
-                           │ BRIGADISTA                                   │
-                           │ OCORRENCIA                                   │
-                           │ RECURSO                                      │
-                           │ REGISTRO_CAMPO                               │
-                           └──────────────────┬───────────────────────────┘
-                                              │
-
-                           ┌──────────────────▼───────────────────────────┐
-                           │           Oracle Database                    │
-                           │     Persistência Relacional Central          │
-                           └──────────────────┬───────────────────────────┘
-                                              │
-
-                           ┌──────────────────▼───────────────────────────┐
-                           │             ARGUS Mobile                     │
-                           │         React Native / Expo                  │
-                           └──────────────────────────────────────────────┘
-```
+![img.png](docs/evidencias/arquitetura-tecnica-solucao-argus.png)
 
 ---
 
@@ -902,19 +846,8 @@ Quando um novo alerta ambiental é criado na **ARGUS Intelligence API**, o event
 
 ### Fluxo validado
 
-```text
-POST /api/alertas
-        ↓
-ARGUS Intelligence API (Java)
-        ↓
-RabbitMQ / CloudAMQP
-        ↓
-Fila de Alertas
-        ↓
-ARGUS Operations API (.NET)
-        ↓
-Processamento Operacional
-```
+
+![img.png](docs/evidencias/arquitetura-fluxo-alerta-argus.png)
 
 ---
 
@@ -941,7 +874,7 @@ Evidências:
 ### 📸 Consumo pela API Operacional
 
 Validação do consumo da mensagem e continuidade do fluxo operacional.
-![img.png](img.png)
+![img.png](docs/evidencias/cors-swagger-response.png)
 
 ### 📸 RabbitMQ — Mensagem de alerta publicada na fila
 
@@ -992,14 +925,42 @@ A API utiliza HATEOAS para enriquecer as respostas REST com links navegáveis en
 
 Essa implementação aproxima a API de uma arquitetura REST mais madura, permitindo que clientes descubram recursos relacionados dinamicamente.
 
-## Cache
+### 📸 Evidência — Cache Aplicado
 
-Foi utilizado cache para otimizar consultas e reduzir processamento repetitivo em operações que podem ser reutilizadas durante a execução da aplicação. Essa estratégia melhora performance, reduz carga sobre o banco de dados e contribui para maior eficiência da API.
+Validação da implementação utilizando **Spring Cache** na camada de serviços.
 
-## CORS
+Evidências demonstradas:
 
-A configuração de CORS permite que a API seja consumida por aplicações externas, como front-end web, mobile e demais serviços do ecossistema ARGUS. Isso viabiliza integração distribuída entre diferentes clientes e camadas da solução.
+* infraestrutura habilitada com `@EnableCaching`;
+* consultas utilizando cache;
+* invalidação automática após alterações.
 
+---
+
+### Configuração CORS
+
+Validação da configuração de CORS aplicada à API para permitir integração entre consumidores externos e serviços do ecossistema ARGUS.
+
+Evidências observadas:
+
+* configuração global de CORS habilitada na aplicação;
+* tratamento de origem (`Origin`) nas respostas HTTP;
+* suporte a métodos e cabeçalhos para consumo distribuído;
+* compatibilidade com integrações externas.
+
+Cabeçalhos identificados:
+
+```text
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+```
+
+Esses cabeçalhos demonstram que a aplicação está preparada para controlar requisições entre diferentes origens conforme configuração definida no Spring.
+### 📸 Consumo pela API Operacional
+![img.png](docs/evidencias/cors-swagger-response.png)
+
+---
 ## Arquitetura de microsserviços
 
 O ARGUS foi estruturado como um ecossistema distribuído, com separação de responsabilidades entre diferentes serviços:
@@ -1125,22 +1086,6 @@ A demonstração contempla ingestão ambiental, análise de risco, geração de 
 
 ---
 
-# ⚡ Cache
-
-Para melhorar desempenho e reduzir consultas repetidas ao banco de dados, a **ARGUS Intelligence API** implementa mecanismos de cache utilizando **Spring Cache**.
-
-A solução foi configurada para armazenar temporariamente resultados de operações de leitura e invalidar automaticamente os dados armazenados sempre que houver alteração de estado na aplicação.
-
-### 🧩 Componentes utilizados
-
-| Recurso          | Objetivo                                 |
-| ---------------- | ---------------------------------------- |
-| `@EnableCaching` | Habilitar infraestrutura global de cache |
-| `@Cacheable`     | Armazenar resultados de consultas        |
-| `@CacheEvict`    | Invalidar dados após alterações          |
-
----
-
 ### 🔄 Fluxo de Funcionamento
 
 ```text
@@ -1186,31 +1131,6 @@ remover()
 ✅ Menor processamento em operações de leitura
 ✅ Estrutura preparada para crescimento e escalabilidade
 
----
-
-### 📸 Evidência — Cache Aplicado
-
-Validação da implementação utilizando **Spring Cache** na camada de serviços.
-
-Evidências demonstradas:
-
-* infraestrutura habilitada com `@EnableCaching`;
-* consultas utilizando cache;
-* invalidação automática após alterações.
-
-![cache-swagger.png](docs/evidencias/cache-swagger.png)
-
----
-
-## 🌐 CORS
-
-A aplicação possui configuração de CORS para permitir o consumo da API por clientes externos do ecossistema ARGUS, como aplicações web, mobile e microsserviços integrados.
-
-A configuração foi externalizada via `application.properties`, permitindo ajustar as origens autorizadas conforme o ambiente de execução.
-
-Métodos liberados:
-
-GET, POST, PUT, DELETE, PATCH e OPTIONS.
 ---
 
 # 👩‍💻 Integrantes e Responsabilidades

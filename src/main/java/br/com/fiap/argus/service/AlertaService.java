@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -32,15 +33,30 @@ public class AlertaService {
         Alerta alerta = AlertaMapper.toEntity(dto, focoCalor);
         Alerta alertaSalvo = alertaRepository.save(alerta);
 
-        AlertaResponseDTO response = AlertaMapper.toResponse(alertaSalvo);
+        publicarSeNecessario(alertaSalvo);
 
-        AlertaMensagemDTO mensagem = montarMensagemAlerta(alertaSalvo);
+        return AlertaMapper.toResponse(alertaSalvo);
+    }
 
-        if (devePublicarNaFila(alertaSalvo)) {
-            produtorAlerta.enviarAlerta(mensagem);
-        }
+    @CacheEvict(value = {"alertas", "alertaPorId"}, allEntries = true)
+    public AlertaResponseDTO gerarAutomaticamente(Long focoCalorId) {
+        FocoCalor focoCalor = buscarFocoCalor(focoCalorId);
 
-        return response;
+        Alerta alerta = new Alerta();
+
+        alerta.setTitulo("Alerta automático - foco de calor detectado");
+        alerta.setDescricao(montarDescricaoAutomatica(focoCalor));
+        alerta.setNivel(calcularNivelRisco(focoCalor));
+        alerta.setStatus("ABERTO");
+        alerta.setScoreRisco(calcularScoreRisco(focoCalor));
+        alerta.setRecomendacaoOperacional(montarRecomendacaoOperacional(focoCalor));
+        alerta.setFocoCalor(focoCalor);
+
+        Alerta alertaSalvo = alertaRepository.save(alerta);
+
+        publicarSeNecessario(alertaSalvo);
+
+        return AlertaMapper.toResponse(alertaSalvo);
     }
 
     @Cacheable("alertas")
@@ -73,6 +89,103 @@ public class AlertaService {
     public void remover(Long id) {
         Alerta alerta = buscarAlerta(id);
         alertaRepository.delete(alerta);
+    }
+
+    private void publicarSeNecessario(Alerta alerta) {
+        if (devePublicarNaFila(alerta)) {
+            AlertaMensagemDTO mensagem = montarMensagemAlerta(alerta);
+            produtorAlerta.enviarAlerta(mensagem);
+        }
+    }
+
+    private String montarDescricaoAutomatica(FocoCalor focoCalor) {
+        return "Alerta gerado automaticamente pelo ARGUS a partir do foco de calor ID "
+                + focoCalor.getId()
+                + ", identificado por dados ambientais monitorados.";
+    }
+
+    private String calcularNivelRisco(FocoCalor focoCalor) {
+        Double frp = focoCalor.getFrp();
+        Double temperatura = focoCalor.getTemperaturaEstimada();
+        Double confianca = extrairConfiancaNumerica(focoCalor);
+
+        if (
+                valorMaiorOuIgual(frp, 80.0)
+                        || valorMaiorOuIgual(temperatura, 65.0)
+                        || valorMaiorOuIgual(confianca, 90.0)
+        ) {
+            return "CRITICO";
+        }
+
+        if (
+                valorMaiorOuIgual(frp, 50.0)
+                        || valorMaiorOuIgual(temperatura, 50.0)
+                        || valorMaiorOuIgual(confianca, 75.0)
+        ) {
+            return "ALTO";
+        }
+
+        if (
+                valorMaiorOuIgual(frp, 25.0)
+                        || valorMaiorOuIgual(temperatura, 40.0)
+                        || valorMaiorOuIgual(confianca, 60.0)
+        ) {
+            return "MEDIO";
+        }
+
+        return "BAIXO";
+    }
+
+    private Double calcularScoreRisco(FocoCalor focoCalor) {
+        double score = 0.0;
+
+        if (focoCalor.getFrp() != null) {
+            score += Math.min(focoCalor.getFrp(), 100.0) * 0.45;
+        }
+
+        if (focoCalor.getTemperaturaEstimada() != null) {
+            score += Math.min(focoCalor.getTemperaturaEstimada(), 100.0) * 0.35;
+        }
+
+        Double confianca = extrairConfiancaNumerica(focoCalor);
+
+        if (confianca != null) {
+            score += Math.min(confianca, 100.0) * 0.20;
+        }
+
+        return Math.min(score, 100.0);
+    }
+
+    private Double extrairConfiancaNumerica(FocoCalor focoCalor) {
+        if (focoCalor.getConfianca() == null) {
+            return null;
+        }
+
+        try {
+            return Double.parseDouble(
+                    focoCalor.getConfianca()
+                            .replace("%", "")
+                            .replace(",", ".")
+                            .trim()
+            );
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    private String montarRecomendacaoOperacional(FocoCalor focoCalor) {
+        String nivel = calcularNivelRisco(focoCalor);
+
+        return switch (nivel) {
+            case "CRITICO" -> "Acionar brigada imediatamente, ampliar perímetro de monitoramento e iniciar contenção preventiva.";
+            case "ALTO" -> "Priorizar monitoramento da região e preparar equipe operacional para possível acionamento.";
+            case "MEDIO" -> "Manter acompanhamento preventivo e validar evolução do foco de calor nas próximas análises.";
+            default -> "Registrar ocorrência para histórico e manter monitoramento periódico da região.";
+        };
+    }
+
+    private boolean valorMaiorOuIgual(Double valor, Double limite) {
+        return valor != null && valor >= limite;
     }
 
     private AlertaMensagemDTO montarMensagemAlerta(Alerta alerta) {
