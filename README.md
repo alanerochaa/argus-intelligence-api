@@ -60,6 +60,7 @@ A arquitetura da aplicação foi construída com foco em:
 
 O fluxo operacional principal de monitoramento inicia pela ingestão de dados ambientais externos, passando pelo processamento e classificação de risco, geração de alertas e posterior compartilhamento das informações com os demais serviços do ecossistema ARGUS.
 
+
 A **API Java atua como núcleo de inteligência da plataforma**, sendo responsável por consolidar eventos ambientais, executar regras de análise e fornecer informações estratégicas para o microserviço operacional em **C#**, responsável pelo gerenciamento de brigadas, ocorrências e resposta em campo.
 
 A solução tem como objetivo proporcionar uma gestão ambiental mais eficiente e orientada por dados, reduzindo tempo de resposta operacional, centralizando informações críticas e ampliando a capacidade de tomada de decisão em cenários de risco ambiental.
@@ -690,8 +691,8 @@ Exemplo de requisição:
 
 ```json
 {
-  "email": "demo@argus.com",
-  "senha": "********"
+  "email":"admin@argus.com",
+  "senha":"Admin@123"
 }
 ```
 
@@ -948,6 +949,124 @@ Validação do consumo da mensagem e continuidade do fluxo operacional.
 
 ---
 
+# ✅ Justificativa dos Requisitos da Entrega
+
+A **ARGUS Intelligence API** atende aos requisitos da Global Solution por meio de uma arquitetura backend em **Spring Boot**, com foco em inteligência ambiental, integração distribuída, segurança, persistência relacional, mensageria e recursos de IA.
+
+## API REST com Spring Boot
+
+A aplicação foi desenvolvida como uma **API RESTful** utilizando Spring Boot, expondo endpoints para gerenciamento de biomas, regiões monitoradas, focos de calor, alertas ambientais, ingestão de dados externos, análise de risco e integração com outros serviços do ecossistema ARGUS.
+
+A API não se limita a operações CRUD, pois também executa fluxos de negócio reais, como:
+
+* ingestão de dados ambientais externos;
+* geração de alertas com base em focos de calor;
+* classificação de risco;
+* integração com IA;
+* publicação de eventos em fila;
+* comunicação com a API operacional em .NET.
+
+## Boas práticas REST e qualidade de código
+
+O projeto foi estruturado em camadas, separando responsabilidades entre `controller`, `service`, `repository`, `dto`, `mapper`, `client`, `security`, `config` e `messaging`.
+
+Essa organização reduz acoplamento, melhora manutenibilidade e facilita evolução futura da solução. Também foram utilizados DTOs para evitar exposição direta das entidades JPA, tratamento global de exceções e padronização dos contratos da API.
+
+## Persistência com banco relacional
+
+A persistência dos dados é realizada em **Oracle Database**, utilizando Spring Data JPA e Hibernate. O modelo relacional contempla entidades como `BIOMA`, `REGIAO`, `FOCO_CALOR` e `ALERTA`, garantindo integridade dos dados por meio de chaves primárias, chaves estrangeiras e relacionamentos entre as tabelas.
+
+## Segurança com Spring Security e JWT
+
+A API possui controle de acesso com **Spring Security** e autenticação baseada em **JWT**. O usuário realiza login no endpoint de autenticação, recebe um token e utiliza esse token para acessar endpoints protegidos.
+
+Essa abordagem garante uma comunicação stateless, segura e adequada para APIs REST distribuídas.
+
+## Swagger e OpenAPI
+
+A documentação da API foi disponibilizada com **Swagger/OpenAPI**, permitindo visualizar, testar e validar os endpoints diretamente pelo navegador. Isso facilita a avaliação técnica, o consumo da API por outros serviços e a padronização dos contratos expostos.
+
+## HATEOAS
+
+A API utiliza HATEOAS para enriquecer as respostas REST com links navegáveis entre recursos relacionados, como alertas, focos de calor e coleções associadas.
+
+Essa implementação aproxima a API de uma arquitetura REST mais madura, permitindo que clientes descubram recursos relacionados dinamicamente.
+
+## Cache
+
+Foi utilizado cache para otimizar consultas e reduzir processamento repetitivo em operações que podem ser reutilizadas durante a execução da aplicação. Essa estratégia melhora performance, reduz carga sobre o banco de dados e contribui para maior eficiência da API.
+
+## CORS
+
+A configuração de CORS permite que a API seja consumida por aplicações externas, como front-end web, mobile e demais serviços do ecossistema ARGUS. Isso viabiliza integração distribuída entre diferentes clientes e camadas da solução.
+
+## Arquitetura de microsserviços
+
+O ARGUS foi estruturado como um ecossistema distribuído, com separação de responsabilidades entre diferentes serviços:
+
+* **ARGUS Intelligence API Java**: inteligência ambiental, ingestão, focos de calor e alertas;
+* **ARGUS Operations API .NET**: brigadas, ocorrências e resposta operacional;
+* **ARGUS IA**: análise inteligente e recomendações;
+* **ARGUS Mobile**: consumo operacional da solução.
+
+Essa divisão permite maior escalabilidade, independência tecnológica, manutenção isolada e evolução modular dos componentes.
+
+## Mensageria com RabbitMQ / CloudAMQP
+
+A mensageria foi utilizada para comunicação assíncrona entre a API Java e a API operacional em .NET.
+
+Quando um alerta é criado na API Java, o evento é publicado em uma fila RabbitMQ/CloudAMQP. A API .NET pode consumir essa mensagem e dar continuidade ao fluxo operacional.
+
+Esse modelo reduz acoplamento entre serviços, melhora resiliência e simula um cenário mais próximo de produção.
+
+## Cliente HTTP com OpenFeign
+
+A aplicação utiliza clientes HTTP, como OpenFeign, para comunicação com serviços externos e internos, incluindo integração com a API operacional em .NET e autenticação dinâmica.
+
+O uso de Feign centraliza a comunicação entre microsserviços, reduz boilerplate, melhora organização do código e facilita manutenção das integrações.
+
+## Spring AI / Inteligência Artificial
+
+O projeto utiliza recursos de inteligência artificial para apoiar a análise ambiental e a tomada de decisão. A IA atua na classificação de risco, geração de recomendações operacionais e interpretação de cenários ambientais.
+
+No contexto do ARGUS, a IA não substitui a operação humana, mas atua como apoio decisório, ajudando a priorizar alertas e orientar ações preventivas.
+
+## Funcionalidade real da API
+
+A API possui funcionalidade real porque representa um fluxo operacional completo:
+
+```text
+Ingestão de dados ambientais
+↓
+Registro de foco de calor
+↓
+Análise de risco
+↓
+Geração de alerta
+↓
+Publicação em fila RabbitMQ
+↓
+Consumo pela API operacional .NET
+↓
+Apoio à resposta em campo
+```
+
+Esse fluxo demonstra aplicação prática da solução, indo além de um CRUD tradicional.
+
+## Deploy, cloud e observabilidade
+
+A aplicação foi publicada em ambiente cloud utilizando Microsoft Azure App Service, com deploy automatizado via GitHub Actions e monitoramento por Spring Actuator.
+
+Essa estrutura demonstra preocupação com execução em ambiente próximo ao produtivo, observabilidade, automação de entrega e disponibilidade da aplicação.
+
+## Conclusão
+
+A ARGUS Intelligence API atende aos requisitos técnicos da entrega ao combinar Spring Boot, Oracle Database, JWT, Swagger/OpenAPI, HATEOAS, Cache, CORS, RabbitMQ, Feign, IA e deploy em cloud.
+
+A solução entrega valor real ao propor uma plataforma distribuída para monitoramento ambiental, análise de risco e acionamento operacional, conectando dados externos, inteligência artificial e resposta em campo.
+
+----
+
 # 📦 Repositórios Oficiais
 
 ☕ **API Java — ARGUS Intelligence API**
@@ -1004,6 +1123,90 @@ A demonstração contempla ingestão ambiental, análise de risco, geração de 
 
 ☁️ Execução distribuída em ambiente cloud.
 
+---
+
+# ⚡ Cache
+
+Para melhorar desempenho e reduzir consultas repetidas ao banco de dados, a **ARGUS Intelligence API** implementa mecanismos de cache utilizando **Spring Cache**.
+
+A solução foi configurada para armazenar temporariamente resultados de operações de leitura e invalidar automaticamente os dados armazenados sempre que houver alteração de estado na aplicação.
+
+### 🧩 Componentes utilizados
+
+| Recurso          | Objetivo                                 |
+| ---------------- | ---------------------------------------- |
+| `@EnableCaching` | Habilitar infraestrutura global de cache |
+| `@Cacheable`     | Armazenar resultados de consultas        |
+| `@CacheEvict`    | Invalidar dados após alterações          |
+
+---
+
+### 🔄 Fluxo de Funcionamento
+
+```text
+GET /api/alertas
+        ↓
+Consulta realizada no Oracle
+        ↓
+Resultado armazenado em cache
+        ↓
+Novas consultas reutilizam o resultado
+```
+
+Quando operações de escrita são executadas (`POST`, `PUT` ou `DELETE`), o cache é automaticamente invalidado para manter consistência entre aplicação e banco de dados.
+
+---
+
+### ⚙️ Estratégia Aplicada
+
+```text
+listar()
+↓
+@Cacheable("alertas")
+
+
+buscarPorId()
+↓
+@Cacheable("alertaPorId")
+
+
+criar()
+atualizar()
+remover()
+↓
+@CacheEvict()
+```
+
+---
+
+### 🚀 Benefícios Obtidos
+
+✅ Redução de consultas repetidas ao Oracle
+✅ Melhor tempo de resposta da API
+✅ Menor processamento em operações de leitura
+✅ Estrutura preparada para crescimento e escalabilidade
+
+---
+
+### 📸 Evidência — Cache Aplicado
+
+Validação da implementação utilizando **Spring Cache** na camada de serviços.
+
+Evidências demonstradas:
+
+* infraestrutura habilitada com `@EnableCaching`;
+* consultas utilizando cache;
+* invalidação automática após alterações.
+
+![cache-swagger.png](docs/evidencias/cache-swagger.png)
+
+---
+
+## 🌐 CORS
+
+Foi realizada configuração de CORS para permitir comunicação segura entre clientes externos e os serviços do ecossistema ARGUS.
+
+Essa configuração possibilita integração entre aplicações web, APIs distribuídas e consumidores autorizados sem comprometer o controle de acesso.
 ---
 
 # 👩‍💻 Integrantes e Responsabilidades

@@ -12,8 +12,9 @@ import br.com.fiap.argus.messaging.ProdutorAlerta;
 import br.com.fiap.argus.repository.AlertaRepository;
 import br.com.fiap.argus.repository.FocoCalorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -24,6 +25,7 @@ public class AlertaService {
     private final FocoCalorRepository focoCalorRepository;
     private final ProdutorAlerta produtorAlerta;
 
+    @CacheEvict(value = {"alertas", "alertaPorId"}, allEntries = true)
     public AlertaResponseDTO criar(AlertaRequestDTO dto) {
         FocoCalor focoCalor = buscarFocoCalor(dto.focoCalorId());
 
@@ -41,6 +43,7 @@ public class AlertaService {
         return response;
     }
 
+    @Cacheable("alertas")
     public List<AlertaResponseDTO> listar() {
         return alertaRepository.findAll()
                 .stream()
@@ -48,11 +51,13 @@ public class AlertaService {
                 .toList();
     }
 
+    @Cacheable(value = "alertaPorId", key = "#id")
     public AlertaResponseDTO buscarPorId(Long id) {
         Alerta alerta = buscarAlerta(id);
         return AlertaMapper.toResponse(alerta);
     }
 
+    @CacheEvict(value = {"alertas", "alertaPorId"}, allEntries = true)
     public AlertaResponseDTO atualizar(Long id, AlertaRequestDTO dto) {
         Alerta alerta = buscarAlerta(id);
         FocoCalor focoCalor = buscarFocoCalor(dto.focoCalorId());
@@ -64,6 +69,7 @@ public class AlertaService {
         return AlertaMapper.toResponse(alertaAtualizado);
     }
 
+    @CacheEvict(value = {"alertas", "alertaPorId"}, allEntries = true)
     public void remover(Long id) {
         Alerta alerta = buscarAlerta(id);
         alertaRepository.delete(alerta);
