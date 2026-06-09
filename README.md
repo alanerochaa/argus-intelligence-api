@@ -1,459 +1,1113 @@
-## 📘 ARGUS Intelligence API
-
-ARGUS Intelligence API é um microserviço desenvolvido com o objetivo de monitorar dados ambientais e fornecer recursos analíticos utilizando tecnologias modernas como Java, Spring Boot e Inteligência Artificial. Este projeto viabiliza a centralização e integração de dados de ambientes, alertas e operações com conectividade em tempo real.
-
----
-
-### 🌟 **Funcionalidades Principais**
-
-1. **Ingestão de Dados Ambientais**:
-    - Conexão com fontes externas como NASA FIRMS para coleta de dados ambientais e geográficos.
-    - Persistência em banco de dados Oracle.
-
-2. **Análise de Risco e Geração de Alertas**:
-    - Boosted por IA, o serviço permite a análise de eventos para identificar padrões críticos.
-
-3. **Mensageria e Eventos Assíncronos**:
-    - RabbitMQ para fila de mensagens e CloudAMQP suporte no cloud.
-
-4. **Integrações**:
-    - Operação conectada ao sistema C#/.NET e um aplicativo mobile de brigadistas.
-
----
-
-### 🛠 **Tecnologias Utilizadas**
-
-- **Backend**:
-    - Java 17, Spring Boot
-    - JPA com suporte ao Oracle
-
-- **Mensageria**:
-    - RabbitMQ + CloudAMQP
-
-- **Inteligência e Analytics**:
-    - IA customizada para análise ambiental
-
-- **Frontend**:
-    - Templates Thymeleaf para views HTML5
-    - CSS para estilização (diretório `static/css/`)
-
-- **Ambiente e Integração**:
-    - NASA FIRMS, OpenAPI
-    - Microsoft Azure para conectividade
-
----
-
-### 📂 **Estrutura do Projeto**
-
-1. **Pacote `br.com.fiap.argus.service`**:
-    - Contém os serviços fundamentais do sistema, como:
-        - IAService, SpringAiService para integração com IA
-        - IngestaoService para ingestão de dados.
-
-2. **Recursos Estáticos**:
-    - Arquivos CSS e assets como imagens e logos hospedados no diretório `src/main/resources/static`.
-
-3. **Frontend / Templates**:
-    - Visão gerada usando Thymeleaf (`src/main/resources/templates/home.html`).
-
----
-
-### 🎯 **Como Executar**
-
-1. Clone o repositório:
-   ```bash
-   git clone <URL-DO-REPOSITÓRIO>
-   cd argus-intelligence-api
-   ```
-
-2. Configure as propriedades:
-    - Certifique-se de editar o arquivo de configurações (`application.properties` ou `application.yaml`), inserindo valores corretos para o banco de dados Oracle, mensageria RabbitMQ e APIs externas.
-
-3. Execute o projeto:
-   ```bash
-   mvn spring-boot:run
-   ```
-
-4. # 🌍 **ARGUS Intelligence API**
-
 <p align="center">
-  <img src="src/main/resources/static/images/argus-logo.png" alt="ARGUS Logo" width="300">
+
+![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge)
+![Spring](https://img.shields.io/badge/Spring_Boot-3.5-success?style=for-the-badge)
+![Oracle](https://img.shields.io/badge/Oracle-Database-red?style=for-the-badge)
+![RabbitMQ](https://img.shields.io/badge/RabbitMQ-AMQP-orange?style=for-the-badge)
+![Azure](https://img.shields.io/badge/Azure-Deploy-blue?style=for-the-badge)
+![Swagger](https://img.shields.io/badge/OpenAPI-3.1-green?style=for-the-badge)
+
 </p>
 
-**ARGUS Intelligence API** é um microserviço robusto projetado para monitoramento ambiental e análise avançada de risco em incêndios florestais. Através de tecnologias modernas como **Spring Boot**, **RabbitMQ**, **Oracle DB** e **IA preditiva**, ele entrega inteligência em tempo real e suporte estratégico para brigadistas.
-
-> 💡 **Missão**: Aproveitar Inteligência Artificial e tecnologias escaláveis para prever e combater incêndios florestais enquanto protege ecossistemas e comunidades ao redor do mundo.
-
----
-
-## 🎨 **Visualização Rápida**
-
-[![Java](https://img.shields.io/badge/Java-17-red)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0-green)](https://spring.io/)
-[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-CloudAMQP-orange)](https://www.rabbitmq.com/)
-[![Oracle](https://img.shields.io/badge/Oracle-Database-blue)](https://www.oracle.com/database/)
-[![Swagger](https://img.shields.io/badge/Swagger-UI-brightgreen)](https://swagger.io/)
-[![Azure Deployment](https://img.shields.io/badge/Azure-Deployment-blue)](https://azure.microsoft.com/)
-
----
-
-## 📜 **Sumário**
-
-1. [✨ Resumo Executivo](#-resumo-executivo)
-2. [🎓 Problema e Solução](#-problema-e-solução)
-3. [🎯 Objetivos e Benefícios](#-objetivos-e-benefícios)
-4. [🏗 Arquitetura](#-arquitetura)
-    - [📂 Diagrama Geral](#-diagrama-geral)
-    - [🔁 Comunicação entre Serviços](#-comunicação-entre-serviços)
-5. [🛠 Tecnologias](#-tecnologias)
-6. [⚙ Funcionalidades](#-funcionalidades)
-7. [🌐 Endpoints da API](#-endpoints-da-api)
-8. [🛡 Segurança](#-segurança)
-9. [🚀 Execução Local](#-execução-local)
-10. [☁ Deploy (Azure)](#-deploy-azure)
-11. [📈 Prints e Resultados](#-prints-e-resultados)
-12. [🤝 Equipe](#-equipe)
-
----
-
-## ✨ **Resumo Executivo**
-
-**ARGUS Intelligence API** é parte de um **ecossistema baseado em microserviços**, projetado para monitorar grandes volumes de dados ambientais e prever eventos catastróficos como queimadas florestais. Ele utiliza algoritmos de IA para análise de riscos, **mensageria com RabbitMQ** para comunicação confiável entre diferentes partes do sistema e persistência robusta com **Oracle Database**.
-
----
-
-## 🎓 **Problema e Solução**
-
-### 🌍 **Problema**
-🔥 Incêndios florestais têm se tornado uma ameaça crescente devido às mudanças climáticas, demandando **tecnologia precisa e rápida** para monitoramento e decisão.
-
-### 💡 **Solução**
-Construir um sistema **automatizado, inteligente e integrado** para monitoramento em tempo real, análise de padrões de risco e suporte estratégico a brigadistas.
-
----
-
-## 🎯 **Objetivos e Benefícios**
-
-#### ⚡ **Objetivos**
-- Monitorar regiões sensíveis e prever incêndios florestais.
-- Criar inteligência analítica acessível para as equipes no campo.
-- Facilitar a comunicação e integração entre serviços e plataformas móveis.
-
-#### ✅ **Principais Benefícios**
-✔️ **Decisão ágil:** Alertas preventivos e automatizados.  
-✔️ **Escalabilidade:** Baseado em microserviços.  
-✔️ **Segurança:** Dados protegidos com autenticação JWT.
-
----
-
-## 🏗 **Arquitetura**
-
-### 📂 Diagrama Geral
-```mermaid
-graph TD
-    A[📡 APIs Externas (ex: NASA, IA)] -->|Coleta| B[[🌍 ARGUS Intelligence API]]
-    B -->|Mensageria| C[[📡 RabbitMQ CloudAMQP]]
-    C -->|Envio de Alertas| D(📲 Aplicativo Mobile)
-    B -->|Persistência| E((💾 Banco Oracle))
-    D -->|Consulta Via API REST| B
-```
-
-### 🔁 Comunicação entre Serviços
-A arquitetura de comunicação é baseada em **mensageria** (RabbitMQ), garantindo integração em tempo real, decoupling entre serviços e escalabilidade.
-
----
-
-## 🛠 **Tecnologias**
-
-| **Ferramenta**       | **Descrição**                          | **Onde É Usada**                  |
-|-----------------------|----------------------------------------|------------------------------------|
-| 💻 **Java 17**        | Linguagem Backend                     | Camada principal do sistema       |
-| 🎨 **Spring Boot 3**  | Framework MVC para APIs REST          | Backend robusto e moderno         |
-| 📨 **RabbitMQ**       | Agente Message Broker                 | Comunicação assíncrona            |
-| 💾 **Oracle DB**      | Banco de Dados Relacional             | Persistência crítica              |
-| 📖 **Swagger UI**     | Documentação de API Interativa        | Interface de teste de APIs REST   |
-| ☁ **Azure**          | Plataforma em Nuvem                   | Deploy seguro e escalável         |
-
----
-
-## ⚙ **Funcionalidades**
-
-1. **Coleta de Dados Geográficos 🛰**:
-    - Integração com APIs externas como **NASA FIRMS**.
-    - Dados ambientais registrados em tempo real.
-
-2. **Análise de Riscos com IA 🤖**:
-    - Detecção de padrões críticos relevantes (fogo/imediato).
-
-3. **Geração de Alertas 🔔**:
-    - Alertas automáticos baseados em zonas críticas.
-
-4. **Mensageria Assíncrona 📬**:
-    - RabbitMQ para garantir a entrega de eventos.
-
-5. **Relatórios e Visualização 📊**:
-    - Painéis de consulta e relatórios para visualização dinâmica.
-
----
-
-## 🌐 **Endpoints da API**
-
-| **Método** | **Endpoint**              | **Descrição**                           |
-|------------|---------------------------|-----------------------------------------|
-| `GET`      | `/api/v1/regions`         | Retorna dados das regiões monitoradas   |
-| `POST`     | `/api/v1/risks`           | Inicia análise de risco                 |
-| `GET`      | `/api/v1/alerts`          | Lista alertas gerados                   |
-| `POST`     | `/api/v1/ingest`          | Ingestão de novos dados ambientais      |
-
----
-
-## 🛡 **Segurança**
-
-- **Autenticação JWT**: Conteúdos protegidos por tokens de sessão temporária.
-- **Configurações Sensíveis**: Variáveis em propriedades externas como:
-   ```properties
-   spring.datasource.url=${DB_URL}
-   spring.security.jwt.secret=${JWT_SECRET}
-   rabbitmq.host=${RABBIT_HOST}
-   ```
-
----
-
-## 🚀 **Execução Local**
-
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/alanerochaa/argus-intelligence-api
-   cd argus-intelligence-api
-   ```
-
-2. Configure o Banco de Dados e Mensageria no arquivo **application.properties**.
-
-3. Inicie o servidor:
-   ```bash
-   mvn spring-boot:run
-   ```
-
-4. Acesse: `http://localhost:8080`
-
----
-
-## ☁ **Deploy (Azure)**
-
-1. Configure no Azure:
-   ```bash
-   az webapp up --name argus-intelligence
-   ```
-
-2. Atualize variáveis no painel com segurança.
-
----
-
-## 📈 **Prints e Resultados**
-
-> **Imagens disponíveis aqui**: Painel, log de alertas e Swagger no browser.
-
----
-
-## 🤝 **Equipe**
-
-| Nome            | Função                    |
-|-----------------|--------------------------|
-| **Alan Rocha**  | Backend Java             |
-| **Duda Araújo** | Inteligência Artificial  |
-| **Anna Bonfim** | Backend (.NET)           |
-
----
-
-**Licença:** Uso acadêmico.# 🌍 **ARGUS Intelligence API**
+# 🛰️ ARGUS Intelligence API
 
 <p align="center">
-  <img src="src/main/resources/static/images/argus-logo.png" alt="ARGUS Logo" width="300">
+  <img src="./src/main/resources/static/images/argus-logo.png" width="220">
 </p>
 
-**ARGUS Intelligence API** é um microserviço robusto projetado para monitoramento ambiental e análise avançada de risco em incêndios florestais. Através de tecnologias modernas como **Spring Boot**, **RabbitMQ**, **Oracle DB** e **IA preditiva**, ele entrega inteligência em tempo real e suporte estratégico para brigadistas.
+<h3 align="center">
+Plataforma de Inteligência Ambiental para Monitoramento de Focos de Calor
+</h3>
 
-> 💡 **Missão**: Aproveitar Inteligência Artificial e tecnologias escaláveis para prever e combater incêndios florestais enquanto protege ecossistemas e comunidades ao redor do mundo.
-
----
-
-## 🎨 **Visualização Rápida**
-
-[![Java](https://img.shields.io/badge/Java-17-red)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.0-green)](https://spring.io/)
-[![RabbitMQ](https://img.shields.io/badge/RabbitMQ-CloudAMQP-orange)](https://www.rabbitmq.com/)
-[![Oracle](https://img.shields.io/badge/Oracle-Database-blue)](https://www.oracle.com/database/)
-[![Swagger](https://img.shields.io/badge/Swagger-UI-brightgreen)](https://swagger.io/)
-[![Azure Deployment](https://img.shields.io/badge/Azure-Deployment-blue)](https://azure.microsoft.com/)
+<p align="center">
+Monitoramento • Análise de Risco • IA • Integração Distribuída • Cloud
+</p>
 
 ---
 
-## 📜 **Sumário**
+## 🛰️ ARGUS Intelligence API — Central Técnica de Inteligência Ambiental
 
-1. [✨ Resumo Executivo](#-resumo-executivo)
-2. [🎓 Problema e Solução](#-problema-e-solução)
-3. [🎯 Objetivos e Benefícios](#-objetivos-e-benefícios)
-4. [🏗 Arquitetura](#-arquitetura)
-    - [📂 Diagrama Geral](#-diagrama-geral)
-    - [🔁 Comunicação entre Serviços](#-comunicação-entre-serviços)
-5. [🛠 Tecnologias](#-tecnologias)
-6. [⚙ Funcionalidades](#-funcionalidades)
-7. [🌐 Endpoints da API](#-endpoints-da-api)
-8. [🛡 Segurança](#-segurança)
-9. [🚀 Execução Local](#-execução-local)
-10. [☁ Deploy (Azure)](#-deploy-azure)
-11. [📈 Prints e Resultados](#-prints-e-resultados)
-12. [🤝 Equipe](#-equipe)
+O **ARGUS Intelligence API** é uma aplicação backend desenvolvida em **Java com Spring Boot**, responsável pela camada de **inteligência ambiental, análise de risco e integração técnica** do ecossistema ARGUS.
 
----
+A solução foi projetada para apoiar o monitoramento ambiental em larga escala, consolidando informações provenientes de **dados satelitais, serviços climáticos, inteligência artificial e operação em campo**, disponibilizando endpoints REST para gerenciamento de biomas, regiões monitoradas, focos de calor, alertas e classificação de risco ambiental.
 
-## ✨ **Resumo Executivo**
+A arquitetura da aplicação foi construída com foco em:
 
-**ARGUS Intelligence API** é parte de um **ecossistema baseado em microserviços**, projetado para monitorar grandes volumes de dados ambientais e prever eventos catastróficos como queimadas florestais. Ele utiliza algoritmos de IA para análise de riscos, **mensageria com RabbitMQ** para comunicação confiável entre diferentes partes do sistema e persistência robusta com **Oracle Database**.
+🛰️ Monitoramento ambiental baseado em dados satelitais;
 
----
+🏗️ Arquitetura RESTful escalável e orientada a serviços;
 
-## 🎓 **Problema e Solução**
+🔥 Detecção, registro e acompanhamento de focos de calor;
 
-### 🌍 **Problema**
-🔥 Incêndios florestais têm se tornado uma ameaça crescente devido às mudanças climáticas, demandando **tecnologia precisa e rápida** para monitoramento e decisão.
+🚨 Geração e gerenciamento de alertas operacionais;
 
-### 💡 **Solução**
-Construir um sistema **automatizado, inteligente e integrado** para monitoramento em tempo real, análise de padrões de risco e suporte estratégico a brigadistas.
+🤖 Apoio à decisão utilizando Inteligência Artificial;
 
----
+🌎 Integração com serviços externos de clima e sensoriamento;
 
-## 🎯 **Objetivos e Benefícios**
+🗄️ Persistência relacional utilizando Oracle Database;
 
-#### ⚡ **Objetivos**
-- Monitorar regiões sensíveis e prever incêndios florestais.
-- Criar inteligência analítica acessível para as equipes no campo.
-- Facilitar a comunicação e integração entre serviços e plataformas móveis.
+🔐 Segurança e controle de acesso utilizando Spring Security;
 
-#### ✅ **Principais Benefícios**
-✔️ **Decisão ágil:** Alertas preventivos e automatizados.  
-✔️ **Escalabilidade:** Baseado em microserviços.  
-✔️ **Segurança:** Dados protegidos com autenticação JWT.
+⚡ Comunicação entre serviços utilizando RabbitMQ / mensageria;
+
+☁️ Deploy em nuvem utilizando Microsoft Azure;
+
+🔄 Integração contínua e automação de build com GitHub Actions;
+
+📄 Documentação automatizada via Swagger / OpenAPI.
+
+
+O fluxo operacional principal de monitoramento inicia pela ingestão de dados ambientais externos, passando pelo processamento e classificação de risco, geração de alertas e posterior compartilhamento das informações com os demais serviços do ecossistema ARGUS.
+
+A **API Java atua como núcleo de inteligência da plataforma**, sendo responsável por consolidar eventos ambientais, executar regras de análise e fornecer informações estratégicas para o microserviço operacional em **C#**, responsável pelo gerenciamento de brigadas, ocorrências e resposta em campo.
+
+A solução tem como objetivo proporcionar uma gestão ambiental mais eficiente e orientada por dados, reduzindo tempo de resposta operacional, centralizando informações críticas e ampliando a capacidade de tomada de decisão em cenários de risco ambiental.
+
+Por meio da integração entre **monitoramento espacial, inteligência artificial, persistência de dados e arquitetura distribuída**, o ARGUS busca demonstrar como tecnologia pode apoiar operações de prevenção, acompanhamento e mitigação de impactos ambientais.
 
 ---
 
-## 🏗 **Arquitetura**
+### 🚒 ARGUS Operations API (.NET)
 
-### 📂 Diagrama Geral
-```mermaid
-graph TD
-    A[📡 APIs Externas (ex: NASA, IA)] -->|Coleta| B[[🌍 ARGUS Intelligence API]]
-    B -->|Mensageria| C[[📡 RabbitMQ CloudAMQP]]
-    C -->|Envio de Alertas| D(📲 Aplicativo Mobile)
-    B -->|Persistência| E((💾 Banco Oracle))
-    D -->|Consulta Via API REST| B
+Responsável pela camada operacional e resposta em campo.
+
+Esse módulo concentra funcionalidades relacionadas à execução operacional:
+
+* Gestão de brigadas;
+* Controle de brigadistas;
+* Registro de ocorrências;
+* Gestão de recursos utilizados em campo;
+* Registro de evidências operacionais;
+* Acompanhamento da execução das ações.
+
+As informações geradas pela API Java alimentam o fluxo operacional consumido pela API C#.
+
+---
+
+### 🤖 ARGUS IA
+
+Responsável pela camada analítica do ecossistema.
+
+Este módulo atua apoiando a tomada de decisão por meio de:
+
+* Classificação inteligente de cenários ambientais;
+* Apoio ao cálculo de risco;
+* Geração de recomendações operacionais;
+* Processamento complementar dos dados ambientais recebidos.
+
+---
+
+### 📱 ARGUS Mobile
+
+Aplicativo responsável pela interface de acesso operacional da plataforma.
+
+Permite:
+
+* Consulta de alertas ambientais;
+* Visualização das ocorrências registradas;
+* Acompanhamento das atividades em campo;
+* Consumo centralizado das APIs do ecossistema.
+
+---
+
+# ☁️ Infraestrutura Cloud e Deploy Contínuo
+
+A solução **ARGUS** foi projetada utilizando arquitetura distribuída e publicada em ambiente cloud, permitindo integração entre serviços independentes e execução próxima de cenários reais de produção.
+
+A infraestrutura foi configurada para suportar aplicações Java e .NET, comunicação entre serviços, integração contínua com GitHub e deploy automatizado em nuvem.
+
+Essa abordagem permitiu consolidar conceitos de:
+
+* Microsserviços;
+* Integração distribuída;
+* DevOps;
+* Computação em nuvem;
+* Observabilidade;
+* Integração contínua;
+* Escalabilidade de aplicações;
+* Disponibilização contínua de serviços.
+
+---
+
+## ☁️ Ambiente Publicado — Microsoft Azure
+
+A **ARGUS Intelligence API** foi disponibilizada utilizando **Microsoft Azure App Service**, permitindo hospedagem em ambiente Linux com runtime Java 17 e integração automática com o repositório GitHub.
+
+A configuração contempla:
+
+* ☕ Runtime Java 17;
+* ☁️ Azure App Service;
+* 🔄 Pipeline automatizada via GitHub Actions;
+* ❤️ Monitoramento e status operacional;
+* 🐧 Ambiente Linux;
+* 🌎 Disponibilização pública da aplicação.
+
+A imagem abaixo apresenta o ambiente cloud configurado e a aplicação em execução.
+
+![Deploy Azure - ARGUS Intelligence API](docs/evidencias/deploy-azure-argus.png)
+
+---
+
+## 🧱 Recursos Utilizados
+
+| Recurso              | Finalidade              |
+| -------------------- | ----------------------- |
+| Microsoft Azure      | Hospedagem da aplicação |
+| GitHub Actions       | CI/CD                   |
+| Oracle Database      | Persistência relacional |
+| RabbitMQ / CloudAMQP | Comunicação assíncrona  |
+| Spring Boot          | Backend                 |
+| Swagger / OpenAPI    | Documentação            |
+| Spring Actuator      | Health Check            |
+
+
+![img.png](docs/evidencias/deploy-azure-argus.png)
+
+### Recursos Utilizados
+
+☁️ Microsoft Azure App Service
+
+☕ Java 17 + Spring Boot
+
+⚙️ ASP.NET Core
+
+🗄️ Oracle Database
+
+📨 RabbitMQ / CloudAMQP
+
+🔄 GitHub Actions (CI/CD)
+
+🐳 Containers e serviços distribuídos
+
+📄 Swagger / OpenAPI
+
+📈 Health Check e monitoramento operacional
+
+---
+
+### Componentes do Ecossistema
+
+🛰️ ARGUS Intelligence API (Java)
+Responsável pela inteligência ambiental
+
+🚒 ARGUS Operations API (.NET)
+Responsável pela operação em campo
+
+🤖 ARGUS IA
+Responsável pelo apoio analítico
+
+📱 ARGUS Mobile
+Responsável pela experiência do usuário
+
+Todos os componentes atuam de forma integrada para apoiar monitoramento, prevenção e resposta operacional em cenários de risco ambiental.
+
+
+# 📊 Diagramas e Arquitetura da Solução
+
+O ecossistema **ARGUS** foi estruturado utilizando arquitetura distribuída baseada em múltiplos serviços integrados, promovendo separação de responsabilidades entre monitoramento ambiental, processamento inteligente, operação em campo, aplicação mobile e persistência centralizada de dados.
+
+A **ARGUS Intelligence API (Java)** atua como núcleo estratégico da plataforma, responsável pela ingestão ambiental, análise de risco e geração de inteligência operacional.
+
+A **ARGUS Operations API (.NET)** concentra os fluxos operacionais relacionados às equipes de campo, ocorrências e resposta operacional.
+
+Complementando o ecossistema, a **API de Inteligência Artificial** apoia o processamento analítico e o **Aplicativo Mobile** atua como interface de consumo das funcionalidades disponibilizadas pelas APIs.
+
+A arquitetura contempla integração com serviços externos, comunicação assíncrona por mensageria, persistência relacional em Oracle Database e deploy em ambiente cloud utilizando Microsoft Azure com pipeline automatizada via GitHub Actions.
+
+```text
+                                         ┌─────────────────────────────┐
+                                         │      Microsoft Azure        │
+                                         │    App Service + CI/CD      │
+                                         └─────────────┬───────────────┘
+                                                       │
+
+       ┌───────────────────────────────────────────────┼──────────────────────────────────────────────┐
+       │                                               │                                              │
+
+┌──────────────────────┐               ┌────────────────────────┐               ┌──────────────────────┐
+│    NASA FIRMS API    │               │      Weather API       │               │      API IA          │
+│ Dados Satelitais     │──────────────▶│ Dados Climáticos       │──────────────▶│ Inteligência         │
+└──────────────────────┘               └────────────────────────┘               └──────────┬──────────┘
+                                                                                             │
+                                                                                             ▼
+
+                           ┌──────────────────────────────────────────────┐
+                           │     ARGUS Intelligence API (Java)            │
+                           │----------------------------------------------│
+                           │ BIOMA                                        │
+                           │ REGIAO                                       │
+                           │ FOCO_CALOR                                   │
+                           │ ALERTA                                       │
+                           │ Análise de Risco                             │
+                           │ Integrações                                  │
+                           │ Swagger / OpenAPI                            │
+                           └──────────────────┬───────────────────────────┘
+                                              │
+
+                                   RabbitMQ / CloudAMQP
+
+                                              │
+
+                           ┌──────────────────▼───────────────────────────┐
+                           │       ARGUS Operations API (.NET)            │
+                           │----------------------------------------------│
+                           │ USUARIO                                      │
+                           │ BRIGADA                                      │
+                           │ BRIGADISTA                                   │
+                           │ OCORRENCIA                                   │
+                           │ RECURSO                                      │
+                           │ REGISTRO_CAMPO                               │
+                           └──────────────────┬───────────────────────────┘
+                                              │
+
+                           ┌──────────────────▼───────────────────────────┐
+                           │           Oracle Database                    │
+                           │     Persistência Relacional Central          │
+                           └──────────────────┬───────────────────────────┘
+                                              │
+
+                           ┌──────────────────▼───────────────────────────┐
+                           │             ARGUS Mobile                     │
+                           │         React Native / Expo                  │
+                           └──────────────────────────────────────────────┘
 ```
 
-### 🔁 Comunicação entre Serviços
-A arquitetura de comunicação é baseada em **mensageria** (RabbitMQ), garantindo integração em tempo real, decoupling entre serviços e escalabilidade.
+---
+
+# 🗃️ Modelo Conceitual do Banco Oracle
+
+O diagrama abaixo representa o modelo conceitual do banco de dados Oracle utilizado pelo ecossistema ARGUS.
+
+A modelagem contempla as entidades, relacionamentos e estruturas persistidas que sustentam a comunicação entre APIs, processamento inteligente e aplicação mobile.
+
+A estrutura foi organizada visando:
+
+* integridade referencial;
+* separação de responsabilidades;
+* integração distribuída;
+* rastreabilidade operacional;
+* escalabilidade arquitetural;
+* persistência relacional centralizada;
+* suporte à tomada de decisão baseada em dados ambientais.
+
+## 🗃️ Modelo Entidade Relacionamento (MER)
+
+O diagrama abaixo representa o **Modelo Entidade Relacionamento (MER)** do ecossistema **ARGUS**, demonstrando a estrutura conceitual das entidades responsáveis pelo monitoramento ambiental, processamento de risco e operação em campo.
+
+A modelagem foi construída considerando separação de domínios entre os componentes Java e .NET, permitindo integração distribuída entre os serviços do ecossistema.
+
+As entidades representam o fluxo completo desde a ingestão ambiental até a resposta operacional.
+
+### Objetivos da modelagem:
+
+* garantir integridade referencial;
+* representar os relacionamentos de negócio;
+* apoiar integração entre microsserviços;
+* permitir rastreabilidade operacional;
+* facilitar evolução arquitetural;
+* sustentar persistência centralizada no Oracle Database.
+
+![MER completo](docs/diagramas/mer-argus.png)
 
 ---
 
-## 🛠 **Tecnologias**
+## 🧱 Diagrama Entidade Relacionamento (DER)
 
-| **Ferramenta**       | **Descrição**                          | **Onde É Usada**                  |
-|-----------------------|----------------------------------------|------------------------------------|
-| 💻 **Java 17**        | Linguagem Backend                     | Camada principal do sistema       |
-| 🎨 **Spring Boot 3**  | Framework MVC para APIs REST          | Backend robusto e moderno         |
-| 📨 **RabbitMQ**       | Agente Message Broker                 | Comunicação assíncrona            |
-| 💾 **Oracle DB**      | Banco de Dados Relacional             | Persistência crítica              |
-| 📖 **Swagger UI**     | Documentação de API Interativa        | Interface de teste de APIs REST   |
-| ☁ **Azure**          | Plataforma em Nuvem                   | Deploy seguro e escalável         |
+O diagrama abaixo representa o **DER físico do banco Oracle**, demonstrando tabelas, atributos, chaves primárias, chaves estrangeiras e relacionamentos persistidos na solução.
 
----
+A estrutura foi organizada para suportar:
 
-## ⚙ **Funcionalidades**
+* monitoramento ambiental;
+* geração de alertas;
+* gestão operacional;
+* integração entre APIs;
+* processamento distribuído.
 
-1. **Coleta de Dados Geográficos 🛰**:
-    - Integração com APIs externas como **NASA FIRMS**.
-    - Dados ambientais registrados em tempo real.
-
-2. **Análise de Riscos com IA 🤖**:
-    - Detecção de padrões críticos relevantes (fogo/imediato).
-
-3. **Geração de Alertas 🔔**:
-    - Alertas automáticos baseados em zonas críticas.
-
-4. **Mensageria Assíncrona 📬**:
-    - RabbitMQ para garantir a entrega de eventos.
-
-5. **Relatórios e Visualização 📊**:
-    - Painéis de consulta e relatórios para visualização dinâmica.
+![DER completo](docs/diagramas/der-argus.png)
 
 ---
 
-## 🌐 **Endpoints da API**
+### 🧱 Diagrama de Classes (UML)
 
-| **Método** | **Endpoint**              | **Descrição**                           |
-|------------|---------------------------|-----------------------------------------|
-| `GET`      | `/api/v1/regions`         | Retorna dados das regiões monitoradas   |
-| `POST`     | `/api/v1/risks`           | Inicia análise de risco                 |
-| `GET`      | `/api/v1/alerts`          | Lista alertas gerados                   |
-| `POST`     | `/api/v1/ingest`          | Ingestão de novos dados ambientais      |
+Representa as principais classes do ecossistema ARGUS, seus atributos, relacionamentos e responsabilidades arquiteturais.
 
----
+O modelo contempla o núcleo ambiental desenvolvido em Java, integração com a camada operacional em .NET, apoio analítico via IA e componentes técnicos responsáveis pela exposição dos serviços.
 
-## 🛡 **Segurança**
+![Diagrama de Classes UML ARGUS](docs/diagramas/uml-argus.png)
+### Principais entidades representadas:
 
-- **Autenticação JWT**: Conteúdos protegidos por tokens de sessão temporária.
-- **Configurações Sensíveis**: Variáveis em propriedades externas como:
-   ```properties
-   spring.datasource.url=${DB_URL}
-   spring.security.jwt.secret=${JWT_SECRET}
-   rabbitmq.host=${RABBIT_HOST}
-   ```
+### 🌱 Núcleo Ambiental (Java)
+
+* `BIOMA`
+* `REGIAO`
+* `FOCO_CALOR`
+* `ALERTA`
 
 ---
 
-## 🚀 **Execução Local**
+### 🚒 Núcleo Operacional (.NET)
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/alanerochaa/argus-intelligence-api
-   cd argus-intelligence-api
-   ```
-
-2. Configure o Banco de Dados e Mensageria no arquivo **application.properties**.
-
-3. Inicie o servidor:
-   ```bash
-   mvn spring-boot:run
-   ```
-
-4. Acesse: `http://localhost:8080`
+* `USUARIO`
+* `BRIGADA`
+* `BRIGADISTA`
+* `OCORRENCIA`
+* `RECURSO`
+* `REGISTRO_CAMPO`
 
 ---
 
-## ☁ **Deploy (Azure)**
+### 🤖 Camada Analítica
 
-1. Configure no Azure:
-   ```bash
-   az webapp up --name argus-intelligence
-   ```
-
-2. Atualize variáveis no painel com segurança.
+* `RISCO`
+* `ANALISE_IA`
+* `RECOMENDACAO_OPERACIONAL`
 
 ---
 
-## 📈 **Prints e Resultados**
+### Componentes Arquiteturais
 
-> **Imagens disponíveis aqui**: Painel, log de alertas e Swagger no browser.
+* Controllers
+* Services
+* Repositories
+* DTOs
+* Clients
+* Config
+* Security
+* OpenAPI
+
+
+# 🔗 Implementação do HATEOAS
+
+A **ARGUS Intelligence API** utiliza o conceito de **HATEOAS (Hypermedia as the Engine of Application State)** para enriquecer as respostas REST com links navegáveis entre recursos relacionados.
+
+Essa abordagem permite que consumidores da API descubram dinamicamente os próximos recursos disponíveis sem depender de URIs previamente conhecidas, aumentando desacoplamento, navegabilidade e evolução da API.
+
+Os recursos retornados podem ser encapsulados utilizando `EntityModel<>`, permitindo expor ações relacionadas ao contexto ambiental monitorado.
+
+Exemplo de implementação:
+
+```java
+EntityModel<AlertaResponseDTO> model =
+EntityModel.of(alerta,
+
+linkTo(
+methodOn(AlertaController.class)
+.buscarPorId(alerta.getId())
+).withSelfRel(),
+
+linkTo(
+methodOn(AlertaController.class)
+.listar()
+).withRel("todos_alertas"),
+
+linkTo(
+methodOn(FocoCalorController.class)
+.buscarPorId(alerta.getFocoCalorId())
+).withRel("foco_calor_relacionado")
+
+);
+```
+
+Com isso, o brigadista consegue navegar entre:
+
+* alerta atual;
+* focos de calor relacionados;
+* coleções completas;
+* recursos dependentes.
+
+Essa estratégia melhora a experiência de integração e aproxima a API de boas práticas REST.
+
+
 
 ---
 
-## 🤝 **Equipe**
+# ⚙️ Tecnologias Utilizadas
 
-| Nome            | Função                    |
-|-----------------|--------------------------|
-| **Alan Rocha**  | Backend Java             |
-| **Duda Araújo** | Inteligência Artificial  |
-| **Anna Bonfim** | Backend (.NET)           |
+| Categoria       | Tecnologia                      | Uso Principal              |
+| --------------- | ------------------------------- | -------------------------- |
+| Linguagem       | ☕ Java 17                       | Desenvolvimento backend    |
+| Framework       | 🌱 Spring Boot 3.5              | Construção da API          |
+| Persistência    | 🗄️ Spring Data JPA / Hibernate | ORM                        |
+| Banco de Dados  | 💾 Oracle Database              | Persistência relacional    |
+| Integração      | 🔌 OpenFeign / REST             | Comunicação entre serviços |
+| Mensageria      | 📨 RabbitMQ / CloudAMQP         | Comunicação assíncrona     |
+| Cache           | ⚡ Spring Cache                  | Otimização                 |
+| Segurança       | 🔐 Spring Security + JWT        | Controle de acesso         |
+| Documentação    | 📖 Swagger / OpenAPI            | Documentação automática    |
+| Observabilidade | ❤️ Spring Actuator              | Monitoramento              |
+| Build           | 🛠️ Maven                       | Dependências e build       |
+| Deploy          | ☁️ Azure App Service            | Hospedagem                 |
+| Utilitário      | ✨ Lombok                        | Redução de boilerplate     |
+---
+
+## 🧠 Stack Arquitetural
+
+```text
+Controller
+↓
+
+Service
+↓
+
+Repository
+↓
+
+Oracle Database
++
+Client
+↓
+
+NASA / IA / C# / APIs externas
+```
+---
+## 📁 Estrutura do Projeto
+
+```text
+argus-intelligence-api
+│
+├── .github/                     → Pipelines e automações
+├── docs/                        → Documentação complementar
+│
+├── src
+│   └── main
+│       ├── java
+│       │   └── br.com.fiap.argus
+│       │
+│       │   ├── client/          → Integrações externas (NASA, IA, C#, Weather)
+│       │   │   ├── AuthCSharpClient
+│       │   │   ├── ClienteIA
+│       │   │   ├── ClienteNASAFirms
+│       │   │   ├── ClienteOcorrenciaCSharp
+│       │   │   └── ClienteWeather
+│       │
+│       │   ├── config/          → Configurações da aplicação
+│       │   │   ├── CacheConfig
+│       │   │   ├── CorsConfig
+│       │   │   ├── CSharpFeignConfig
+│       │   │   ├── OpenApiConfig
+│       │   │   └── SecurityConfig
+│       │
+│       │   ├── controller/      → Exposição dos endpoints REST
+│       │   │   ├── AuthController
+│       │   │   ├── BiomaController
+│       │   │   ├── RegiaoController
+│       │   │   ├── FocoCalorController
+│       │   │   ├── AlertaController
+│       │   │   ├── IAController
+│       │   │   ├── SpringAiController
+│       │   │   ├── IngestaoController
+│       │   │   ├── IntegracaoOperationsController
+│       │   │   ├── RiscoController
+│       │   │   └── HomeController
+│       │
+│       │   ├── domain/          → Entidades JPA
+│       │   │   ├── Bioma
+│       │   │   ├── Regiao
+│       │   │   ├── FocoCalor
+│       │   │   └── Alerta
+│       │
+│       │   ├── dto/
+│       │   │   ├── request/     → Entrada da API
+│       │   │   ├── response/    → Saída padronizada
+│       │   │   └── messaging/   → DTOs de mensageria
+│       │
+│       │   ├── exception/       → Tratamento global de erros
+│       │   │   ├── BusinessException
+│       │   │   ├── ResourceNotFoundException
+│       │   │   └── GlobalExceptionHandler
+│       │
+│       │   ├── mapper/          → Conversão DTO ↔ Entidade
+│       │
+│       │   ├── messaging/       → Integração RabbitMQ
+│       │   │   ├── MessagingConfig
+│       │   │   └── ProdutorAlerta
+│       │
+│       │   ├── repository/      → Persistência Oracle
+│       │
+│       │   ├── security/        → JWT e autenticação
+│       │   │   ├── JwtService
+│       │   │   ├── JwtAuthenticationFilter
+│       │   │   └── CSharpTokenProvider
+│       │
+│       │   ├── service/         → Regras de negócio
+│       │   │   ├── AuthService
+│       │   │   ├── BiomaService
+│       │   │   ├── RegiaoService
+│       │   │   ├── FocoCalorService
+│       │   │   ├── AlertaService
+│       │   │   ├── IAService
+│       │   │   ├── SpringAiService
+│       │   │   ├── IngestaoService
+│       │   │   ├── OperationsCSharpService
+│       │   │   └── RiscoService
+│       │
+│       │   └── ArgusIntelligenceApiApplication
+│       │
+│       └── resources
+│           ├── application.properties
+│           ├── db/
+│           │   └── 01_create_contexto_java.sql
+│           │
+│           ├── static/
+│           │   ├── css/
+│           │   └── images/
+│           │
+│           └── templates/
+│               └── home.html
+│
+├── pom.xml                      → Dependências Maven
+├── README.md                    → Documentação principal
+├── mvnw / mvnw.cmd              → Wrapper Maven
+└── target/                      → Artefatos compilados
+```
+
+### Organização Arquitetural
+
+A solução segue arquitetura em camadas para garantir separação de responsabilidades:
+
+```text
+Controller
+↓
+Service
+↓
+Repository
+↓
+Oracle Database
+
++ Camadas transversais:
+Security
+Messaging
+Client
+Config
+Exception
+DTO
+```
+
+Cada camada possui responsabilidade única, reduzindo acoplamento e facilitando manutenção, testes e evolução da aplicação.
+
+# 🏗️ Camadas e Responsabilidades
+
+A arquitetura da **ARGUS Intelligence API** segue o padrão de camadas bem definidas, promovendo **baixo acoplamento**, **alta coesão**, **manutenção simplificada** e **evolução independente dos componentes**.
+
+| Camada                          | Pacote                             | Responsabilidade                                                                                             |
+| ------------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Apresentação (Controller)**   | `br.com.fiap.argus.controller`     | Define os endpoints REST responsáveis por receber requisições HTTP e expor os recursos da plataforma.        |
+| **Aplicação (Service)**         | `br.com.fiap.argus.service`        | Implementa regras de negócio, processamento ambiental, classificação de risco e orquestração entre serviços. |
+| **Domínio (Entities / Enums)**  | `br.com.fiap.argus.domain`         | Contém entidades JPA e enums que representam o núcleo ambiental da solução.                                  |
+| **DTO / Mapper**                | `br.com.fiap.argus.dto` / `mapper` | Realiza desacoplamento entre domínio e contratos externos.                                                   |
+| **Infraestrutura (Repository)** | `br.com.fiap.argus.repository`     | Responsável pela persistência utilizando Spring Data JPA e Oracle Database.                                  |
+| **Configuração**                | `br.com.fiap.argus.config`         | Centraliza segurança, OpenAPI, CORS, cache e configurações técnicas.                                         |
+| **Integrações Externas**        | `br.com.fiap.argus.client`         | Comunicação com NASA FIRMS, IA, Weather API e API operacional C#.                                            |
 
 ---
 
-**Licença:** Uso acadêmico.Acesse no navegador:
+## Distribuição dos Componentes
+
+### 🌐 Camada Controller
+
+Responsável por expor recursos como:
+
+* `/api/biomas`
+* `/api/regioes`
+* `/api/focos`
+* `/api/alertas`
+* `/api/ingestao`
+* `/api/ia`
+
+---
+
+### ⚙️ Camada Service
+
+Responsável por:
+
+* processamento ambiental;
+* cálculo de risco;
+* ingestão de dados;
+* regras de alerta;
+* integração distribuída.
+
+---
+
+### 🗄️ Camada Repository
+
+Responsável por:
+
+* persistência Oracle;
+* consultas;
+* abstração do acesso ao banco.
+
+---
+
+### 🔌 Camada Client
+
+Responsável por:
+
+* integração NASA FIRMS;
+* integração IA;
+* integração C#;
+* integração climática.
+
+
+# 📈 Evidências Operacionais
+
+Esta seção apresenta as validações executadas em ambiente cloud para comprovação do funcionamento dos componentes distribuídos do ecossistema ARGUS.
+
+---
+
+## 📸 Health Check — Aplicação e Infraestrutura
+
+Validação do estado operacional da API Java publicada em Azure utilizando Spring Boot Actuator.
+
+Evidências:
+- Aplicação publicada e disponível;
+- Conectividade com Oracle;
+- RabbitMQ ativo;
+- Recursos monitorados em tempo real;
+- Endpoint `/actuator/health` respondendo corretamente.
+
+![img.png](docs/evidencias/img.png)
+
+---
+## 📸 Integração NASA FIRMS
+
+Validação da disponibilidade do serviço responsável pela ingestão dos dados ambientais.
+
+Evidências:
+- Serviço externo online;
+- Endpoint de ingestão operacional;
+- Retorno estruturado da integração.
+
+![img_1.png](docs/evidencias/img_1.png)
+
+---
+## 📸 Integração com IA
+
+Validação da camada de inteligência utilizada para análise ambiental e apoio à decisão.
+
+Evidências:
+- API IA publicada;
+- Endpoint de consulta operacional;
+- Geração de análises e recomendações.
+
+![img_2.png](docs/evidencias/img_2.png)
+
+---
+
+## 📸 RabbitMQ / Mensageria
+
+Validação da comunicação assíncrona entre componentes.
+
+Evidências:
+- Broker disponível;
+- Processamento de eventos;
+- Integração entre serviços.
+
+[COLOCAR PRINT]
+
+---
+
+# 📘 Swagger / OpenAPI
+
+# 🔐 Autenticação e Autorização
+
+A ARGUS Intelligence API utiliza autenticação baseada em **JWT (JSON Web Token)** para proteger os endpoints privados da aplicação.
+
+Para consumir recursos protegidos é necessário obter um token válido através do endpoint de login e utilizá-lo no botão **Authorize** do Swagger.
+
+---
+
+## 1. Realizar autenticação
+
+Endpoint:
+
+```http
+POST /api/auth/login
+```
+
+Exemplo de requisição:
+
+```json
+{
+  "email": "demo@argus.com",
+  "senha": "********"
+}
+```
+
+Após executar o login, a API retorna um token JWT.
+
+Exemplo de resposta:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9...[TOKEN_EXEMPLO]"
+}
+```
+
+---
+
+## 2. Autorizar no Swagger
+
+Copie o valor retornado no campo `token`.
+
+Clique em:
+
+```text
+Authorize 🔒
+```
+
+Preencha:
+
+```text
+Bearer SEU_TOKEN
+```
+
+Exemplo:
+
+```text
+Bearer eyJhbGciOiJIUzI1Ni...
+```
+
+Clique em **Authorize** e depois em **Close**.
+
+---
+
+## 3. Executar endpoints protegidos
+
+Após autorização, os endpoints autenticados poderão ser executados diretamente pela interface Swagger.
+
+Exemplos:
+
+```http
+GET /api/biomas
+GET /api/regioes
+POST /api/alertas
+POST /api/ingestao/sync/24h
+GET /api/riscos
+```
+
+# 📈 Evidências — Exemplos de Execução
+
+Os exemplos abaixo representam os payloads utilizados durante validação funcional da plataforma ARGUS em ambiente cloud.
+
+---
+
+## 🌱 Cadastro de Bioma
+
+### POST /api/biomas:
+
+```json
+{
+  "nome": "Zona Costeira Monitorada",
+  "descricao": "Área monitorada para acompanhamento de risco ambiental, alterações climáticas e geração preventiva de alertas.",
+  "areaKm2": 512430.5,
+  "nivelRiscoMedio": "ALTO",
+  "statusMonitoramento": "ATIVO"
+}
+```
+
+---
+
+## 🔥 Cadastro de Foco de Calor
+
+### POST /api/focos:
+
+```json
+{
+  "latitude": -10.2358,
+  "longitude": -54.9812,
+  "frp": 92.7,
+  "temperaturaEstimada": 43.2,
+  "confianca": "ALTA",
+  "satelite": "VIIRS",
+  "sensor": "SNPP",
+  "origemDado": "NASA FIRMS",
+  "dataHora": "2026-06-09T10:30:00",
+  "status": "MONITORADO",
+  "payloadJson": "{\"source\":\"NASA\",\"criticidade\":\"ALTA\"}",
+  "regiaoId": 1
+}
+```
+
+---
+
+## 🚨 Geração de Alerta Ambiental
+
+### POST /api/alertas:
+
+```json
+{
+  "titulo": "Alerta crítico de foco de calor",
+  "descricao": "Foco de calor detectado com alta intensidade em área monitorada.",
+  "nivel": "CRITICO",
+  "status": "ABERTO",
+  "scoreRisco": 95,
+  "recomendacaoOperacional": "Acionar brigada e ampliar monitoramento da região.",
+  "focoCalorId": 1
+}
+```
+
+---
+
+## 📋 Consulta de Alertas
+
+### GET /api/alertas
+
+Exemplo de retorno esperado:
+
+```json
+{
+  "_embedded": {
+    "alertaResponseDTOList": [
+      {
+        "titulo": "Alerta crítico de foco de calor",
+        "nivel": "CRITICO",
+        "status": "ABERTO",
+        "scoreRisco": 95
+      }
+    ]
+  }
+}
+```
+
+---
+
+## 🛰️ Ingestão de Dados Ambientais
+
+### POST /api/ingestao/sync/24h
+
+Exemplo de retorno esperado:
+
+```json
+{
+  "status": "SUCESSO",
+  "fonte": "NASA FIRMS",
+  "registrosImportados": 37,
+  "mensagem": "Focos de calor sincronizados com sucesso."
+}
+```
+
+---
+
+## 🤖 Integração com Inteligência Artificial
+
+### POST /api/ia/consultar
+
+```json
+{
+  "descricao": "Foco de calor detectado em área de vegetação seca.",
+  "temperatura": 43.2,
+  "nivelRisco": "ALTO"
+}
+```
+
+Exemplo de retorno esperado:
+
+```json
+{
+  "classificacao": "CRITICO",
+  "recomendacao": "Realizar acompanhamento contínuo e acionamento preventivo."
+}
+```
+
+---
+
+## 🔄 Integração com API Operacional (.NET)
+
+### GET /api/operations/ocorrencias
+
+Exemplo de retorno esperado:
+
+```json
+{
+  "ocorrencias": [
+    {
+      "id": 1,
+      "titulo": "Incêndio em área monitorada",
+      "status": "EM_ANDAMENTO",
+      "brigada": "Brigada Norte"
+    }
+  ]
+}
+```
+
+# 📨 Integração Assíncrona com RabbitMQ e API Operacional (.NET)
+
+O ecossistema **ARGUS** utiliza comunicação assíncrona baseada em mensageria para desacoplar o processamento ambiental da execução operacional.
+
+Quando um novo **alerta ambiental** é criado pela **ARGUS Intelligence API (Java)**, o evento é publicado em uma fila RabbitMQ/CloudAMQP e posteriormente consumido pela **ARGUS Operations API (.NET)**.
+
+Essa abordagem permite maior escalabilidade, tolerância a falhas e processamento distribuído entre os serviços.
+
+---
+
+## Fluxo Operacional
+
+```text id="3nmxsf"
+POST /api/alertas
+        ↓
+AlertaService
+        ↓
+ProdutorAlerta
+        ↓
+RabbitMQ / CloudAMQP
+        ↓
+Fila de Alertas
+        ↓
+ARGUS Operations API (.NET)
+        ↓
+Consumidor da Mensagem
+        ↓
+Processamento Operacional
+        ↓
+Criação de Ocorrência
+```
+
+---
+
+## Exemplo de Evento Publicado
+
+### POST /api/alertas
+
+```json id="lyz3wq"
+{
+  "titulo": "Teste RabbitMQ",
+  "descricao": "Integração entre Inteligência Ambiental e Operação",
+  "nivel": "CRITICO",
+  "status": "ABERTO",
+  "scoreRisco": 95,
+  "recomendacaoOperacional": "Acionar brigada imediatamente",
+  "focoCalorId": 1
+}
+```
+
+---
+
+## Evento Encaminhado para Mensageria
+
+```json id="cpgv0h"
+{
+  "tipoEvento": "ALERTA_CRIADO",
+  "origem": "ARGUS Intelligence API",
+  "nivel": "CRITICO",
+  "scoreRisco": 95,
+  "destino": "ARGUS Operations API"
+}
+```
+
+---
+
+## Responsabilidades dos Serviços
+
+### ☕ ARGUS Intelligence API (Java)
+
+* gerar alertas ambientais;
+* publicar eventos na fila;
+* manter rastreabilidade ambiental;
+* integrar dados externos.
+
+### ⚙️ ARGUS Operations API (.NET)
+
+* consumir eventos recebidos;
+* transformar alertas em operação;
+* apoiar resposta em campo;
+* registrar ocorrências.
+
+---
+
+## Benefícios Arquiteturais
+
+✔ Comunicação assíncrona
+✔ Baixo acoplamento entre serviços
+✔ Escalabilidade horizontal
+✔ Resiliência operacional
+✔ Arquitetura orientada a eventos
+✔ Integração distribuída
+
+
+
+
+
+
+
+
+
+## ✅ Validação da Solução
+
+Todos os módulos do ecossistema **ARGUS** foram testados com sucesso em ambiente cloud, utilizando validações via **Swagger/OpenAPI**, testes funcionais dos endpoints REST, integração entre microsserviços e monitoramento operacional.
+
+A validação contemplou comunicação entre os componentes da arquitetura distribuída, persistência relacional em Oracle Database, integração externa e execução dos fluxos de inteligência ambiental.
+
+---
+
+# 📦 Repositórios Oficiais
+
+☕ **API Java — ARGUS Intelligence API**
+https://github.com/alanerochaa/argus-intelligence-api
+
+⚙️ **API Operacional .NET — ARGUS Operations API**
+https://github.com/annabonfim/argus-dotnet-api
+
+🤖 **API de Inteligência Artificial — ARGUS IA**
+https://github.com/DudaAraujo14/argus-ia-spring
+
+---
+
+# 🎬 Vídeo de Apresentação
+
+O vídeo de apresentação demonstra o funcionamento completo do ecossistema **ARGUS**, evidenciando a arquitetura distribuída, integração entre serviços e fluxo operacional desenvolvido durante a Global Solution.
+
+A demonstração contempla ingestão ambiental, análise de risco, geração de alertas, consumo entre APIs, persistência em banco relacional e publicação em ambiente cloud.
+
+📺 **Assista aqui:**
+`[INSERIR LINK DO VÍDEO GS]`
+
+---
+
+# 🧾 Conteúdos Demonstrados no Vídeo
+
+☁️ Deploy da aplicação em Microsoft Azure App Service;
+
+⚙️ Pipeline CI/CD utilizando GitHub Actions;
+
+🔐 Fluxo de autenticação e autorização utilizando JWT;
+
+🛰️ Ingestão de dados ambientais externos (NASA FIRMS);
+
+🔥 Cadastro e gerenciamento de focos de calor;
+
+🚨 Geração e gerenciamento de alertas ambientais;
+
+🤖 Integração com módulo de Inteligência Artificial;
+
+📖 Documentação técnica via Swagger/OpenAPI;
+
+🔗 Navegação REST utilizando HATEOAS;
+
+❤️ Monitoramento operacional via Spring Actuator;
+
+🧱 Persistência relacional utilizando Oracle Database;
+
+📨 Comunicação assíncrona utilizando RabbitMQ / CloudAMQP;
+
+🔄 Integração entre API Java e API operacional em .NET;
+
+📱 Consumo dos serviços pelo ecossistema ARGUS;
+
+☁️ Execução distribuída em ambiente cloud.
+
+---
+
+# 👩‍💻 Integrantes e Responsabilidades
+
+| Nome Completo                  | RM       | Responsabilidade no Projeto                                                                                                  | GitHub        |
+| ------------------------------ | -------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| **Alane Rocha da Silva**       | RM561052 | Arquitetura e desenvolvimento da API Java, inteligência ambiental, integrações externas, banco Oracle e documentação técnica | @alanerochaa  |
+| **Anna Beatriz Bonfim**        | RM559561 | Desenvolvimento da API operacional em .NET, gestão operacional e integração entre serviços                                   | @annabonfim   |
+| **Maria Eduarda Araujo Penas** | RM560944 | Desenvolvimento da camada de Inteligência Artificial, análise de risco e apoio analítico                                     | @DudaAraujo14 |
+
+---
+
+<p align="center">
+Desenvolvido com 💜 pela equipe <strong>CodeGirls</strong> — Global Solution • FIAP 2026
+</p>
