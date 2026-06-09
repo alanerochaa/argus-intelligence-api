@@ -882,6 +882,10 @@ Validação do consumo da mensagem e continuidade do fluxo operacional.
 
 ---
 
+### 📲 Disponibilização do Aplicativo Mobile para Testes
+
+
+
 # ✅ Justificativa dos Requisitos da Entrega
 
 A **ARGUS Intelligence API** atende aos requisitos da Global Solution por meio de uma arquitetura backend em **Spring Boot**, com foco em inteligência ambiental, integração distribuída, segurança, persistência relacional, mensageria e recursos de IA.
