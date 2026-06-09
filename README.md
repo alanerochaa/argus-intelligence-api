@@ -110,14 +110,13 @@ Permite:
 * Consumo centralizado das APIs do ecossistema.
 
 ---
+# ☁️ Infraestrutura Cloud, Deploy e Observabilidade
 
-# ☁️ Infraestrutura Cloud e Deploy Contínuo
+O ecossistema **ARGUS** foi projetado utilizando arquitetura distribuída e publicado em ambiente cloud, permitindo integração entre serviços independentes e simulação de cenários próximos ao ambiente produtivo.
 
-A solução **ARGUS** foi projetada utilizando arquitetura distribuída e publicada em ambiente cloud, permitindo integração entre serviços independentes e execução próxima de cenários reais de produção.
+A infraestrutura suporta comunicação entre aplicações **Java, .NET e componentes analíticos**, utilizando deploy automatizado, monitoramento operacional e integração contínua.
 
-A infraestrutura foi configurada para suportar aplicações Java e .NET, comunicação entre serviços, integração contínua com GitHub e deploy automatizado em nuvem.
-
-Essa abordagem permitiu consolidar conceitos de:
+A arquitetura foi construída para consolidar conceitos de:
 
 * Microsserviços;
 * Integração distribuída;
@@ -125,25 +124,23 @@ Essa abordagem permitiu consolidar conceitos de:
 * Computação em nuvem;
 * Observabilidade;
 * Integração contínua;
-* Escalabilidade de aplicações;
-* Disponibilização contínua de serviços.
+* Escalabilidade;
+* Comunicação assíncrona.
 
 ---
 
 ## ☁️ Ambiente Publicado — Microsoft Azure
 
-A **ARGUS Intelligence API** foi disponibilizada utilizando **Microsoft Azure App Service**, permitindo hospedagem em ambiente Linux com runtime Java 17 e integração automática com o repositório GitHub.
+A **ARGUS Intelligence API** foi publicada utilizando **Microsoft Azure App Service**, permitindo execução em ambiente Linux com **Java 17**, integração automática com repositório GitHub e disponibilização pública da aplicação.
 
-A configuração contempla:
+### Configuração da infraestrutura
 
 * ☕ Runtime Java 17;
 * ☁️ Azure App Service;
-* 🔄 Pipeline automatizada via GitHub Actions;
-* ❤️ Monitoramento e status operacional;
+* 🔄 Deploy automatizado via GitHub Actions;
+* ❤️ Monitoramento operacional com Spring Actuator;
 * 🐧 Ambiente Linux;
-* 🌎 Disponibilização pública da aplicação.
-
-A imagem abaixo apresenta o ambiente cloud configurado e a aplicação em execução.
+* 🌎 Publicação em ambiente cloud.
 
 ![Deploy Azure - ARGUS Intelligence API](docs/evidencias/deploy-azure-argus.png)
 
@@ -151,57 +148,35 @@ A imagem abaixo apresenta o ambiente cloud configurado e a aplicação em execu�
 
 ## 🧱 Recursos Utilizados
 
-| Recurso              | Finalidade              |
-| -------------------- | ----------------------- |
-| Microsoft Azure      | Hospedagem da aplicação |
-| GitHub Actions       | CI/CD                   |
-| Oracle Database      | Persistência relacional |
-| RabbitMQ / CloudAMQP | Comunicação assíncrona  |
-| Spring Boot          | Backend                 |
-| Swagger / OpenAPI    | Documentação            |
-| Spring Actuator      | Health Check            |
-
-
-![img.png](docs/evidencias/deploy-azure-argus.png)
-
-### Recursos Utilizados
-
-☁️ Microsoft Azure App Service
-
-☕ Java 17 + Spring Boot
-
-⚙️ ASP.NET Core
-
-🗄️ Oracle Database
-
-📨 RabbitMQ / CloudAMQP
-
-🔄 GitHub Actions (CI/CD)
-
-🐳 Containers e serviços distribuídos
-
-📄 Swagger / OpenAPI
-
-📈 Health Check e monitoramento operacional
+| Recurso | Finalidade |
+|----------|-----------|
+| Microsoft Azure | Hospedagem da aplicação |
+| GitHub Actions | Pipeline CI/CD |
+| Oracle Database | Persistência relacional |
+| RabbitMQ / CloudAMQP | Comunicação assíncrona |
+| Spring Boot | Backend |
+| Swagger / OpenAPI | Documentação |
+| Spring Actuator | Health Check |
 
 ---
 
-### Componentes do Ecossistema
+## 🧩 Componentes do Ecossistema
 
-🛰️ ARGUS Intelligence API (Java)
-Responsável pela inteligência ambiental
+🛰️ **ARGUS Intelligence API (Java)**  
+Responsável pela inteligência ambiental, ingestão de dados e geração de alertas.
 
-🚒 ARGUS Operations API (.NET)
-Responsável pela operação em campo
+🚒 **ARGUS Operations API (.NET)**  
+Responsável pela gestão operacional e resposta em campo.
 
-🤖 ARGUS IA
-Responsável pelo apoio analítico
+🤖 **ARGUS IA**  
+Responsável pela análise complementar de risco e recomendações operacionais.
 
-📱 ARGUS Mobile
-Responsável pela experiência do usuário
+📱 **ARGUS Mobile**  
+Responsável pelo consumo dos serviços e experiência operacional.
 
-Todos os componentes atuam de forma integrada para apoiar monitoramento, prevenção e resposta operacional em cenários de risco ambiental.
+Todos os componentes atuam de forma integrada por meio de APIs REST, mensageria e persistência centralizada, permitindo monitoramento ambiental e resposta operacional orientada por dados.
 
+---
 
 # 📊 Diagramas e Arquitetura da Solução
 
@@ -446,18 +421,17 @@ Essa estratégia melhora a experiência de integração e aproxima a API de boas
 ```text
 Controller
 ↓
+Service
+↓
+Repository
+↓
+Oracle Database
+
 
 Service
 ↓
-
-Repository
+Clients
 ↓
-
-Oracle Database
-+
-Client
-↓
-
 NASA / IA / C# / APIs externas
 ```
 ---
@@ -694,19 +668,6 @@ Evidências:
 
 ---
 
-## 📸 RabbitMQ / Mensageria
-
-Validação da comunicação assíncrona entre componentes.
-
-Evidências:
-- Broker disponível;
-- Processamento de eventos;
-- Integração entre serviços.
-
-[COLOCAR PRINT]
-
----
-
 # 📘 Swagger / OpenAPI
 
 # 🔐 Autenticação e Autorização
@@ -930,25 +891,20 @@ Exemplo de retorno esperado:
   ]
 }
 ```
+## 📨 RabbitMQ / Mensageria
 
-# 📨 Integração Assíncrona com RabbitMQ e API Operacional (.NET)
+Validação da comunicação assíncrona entre os componentes distribuídos do ecossistema **ARGUS**, demonstrando o desacoplamento entre a camada de inteligência ambiental (**Java**) e a camada operacional (**.NET**).
 
-O ecossistema **ARGUS** utiliza comunicação assíncrona baseada em mensageria para desacoplar o processamento ambiental da execução operacional.
-
-Quando um novo **alerta ambiental** é criado pela **ARGUS Intelligence API (Java)**, o evento é publicado em uma fila RabbitMQ/CloudAMQP e posteriormente consumido pela **ARGUS Operations API (.NET)**.
-
-Essa abordagem permite maior escalabilidade, tolerância a falhas e processamento distribuído entre os serviços.
+Quando um novo alerta ambiental é criado na **ARGUS Intelligence API**, o evento é publicado em uma fila RabbitMQ / CloudAMQP e posteriormente consumido pela **ARGUS Operations API**, permitindo processamento distribuído e resposta operacional em campo.
 
 ---
 
-## Fluxo Operacional
+### Fluxo validado
 
-```text id="3nmxsf"
+```text
 POST /api/alertas
         ↓
-AlertaService
-        ↓
-ProdutorAlerta
+ARGUS Intelligence API (Java)
         ↓
 RabbitMQ / CloudAMQP
         ↓
@@ -956,87 +912,39 @@ Fila de Alertas
         ↓
 ARGUS Operations API (.NET)
         ↓
-Consumidor da Mensagem
-        ↓
 Processamento Operacional
-        ↓
-Criação de Ocorrência
 ```
 
 ---
 
-## Exemplo de Evento Publicado
+### 📸 Publicação do Alerta
 
-### POST /api/alertas
+Execução do endpoint responsável pela geração do alerta ambiental.
 
-```json id="lyz3wq"
-{
-  "titulo": "Teste RabbitMQ",
-  "descricao": "Integração entre Inteligência Ambiental e Operação",
-  "nivel": "CRITICO",
-  "status": "ABERTO",
-  "scoreRisco": 95,
-  "recomendacaoOperacional": "Acionar brigada imediatamente",
-  "focoCalorId": 1
-}
-```
+![Publicação do alerta](docs/evidencias/swagger-alerta-publicado.png)
 
 ---
 
-## Evento Encaminhado para Mensageria
+## 📸 RabbitMQ / Mensageria
 
-```json id="cpgv0h"
-{
-  "tipoEvento": "ALERTA_CRIADO",
-  "origem": "ARGUS Intelligence API",
-  "nivel": "CRITICO",
-  "scoreRisco": 95,
-  "destino": "ARGUS Operations API"
-}
-```
+Validação da comunicação assíncrona entre os microsserviços do ARGUS.
 
----
+Evidências:
+- Publicação de eventos pela API Java;
+- Consumo automático pelo serviço .NET;
+- Conexões AMQP ativas;
+- Troca de mensagens entre produtor e consumidor.
 
-## Responsabilidades dos Serviços
+![img.png](docs/evidencias/conexões.png)
 
-### ☕ ARGUS Intelligence API (Java)
+### 📸 Consumo pela API Operacional
 
-* gerar alertas ambientais;
-* publicar eventos na fila;
-* manter rastreabilidade ambiental;
-* integrar dados externos.
+Validação do consumo da mensagem e continuidade do fluxo operacional.
+![img.png](img.png)
 
-### ⚙️ ARGUS Operations API (.NET)
+### 📸 RabbitMQ — Mensagem de alerta publicada na fila
 
-* consumir eventos recebidos;
-* transformar alertas em operação;
-* apoiar resposta em campo;
-* registrar ocorrências.
-
----
-
-## Benefícios Arquiteturais
-
-✔ Comunicação assíncrona
-✔ Baixo acoplamento entre serviços
-✔ Escalabilidade horizontal
-✔ Resiliência operacional
-✔ Arquitetura orientada a eventos
-✔ Integração distribuída
-
-
-
-
-
-
-
-
-
-## ✅ Validação da Solução
-
-Todos os módulos do ecossistema **ARGUS** foram testados com sucesso em ambiente cloud, utilizando validações via **Swagger/OpenAPI**, testes funcionais dos endpoints REST, integração entre microsserviços e monitoramento operacional.
-
-A validação contemplou comunicação entre os componentes da arquitetura distribuída, persistência relacional em Oracle Database, integração externa e execução dos fluxos de inteligência ambiental.
+![rabbitmq-evento-alerta-publicado.png](docs/evidencias/rabbitmq-evento-alerta-publicado.png)
 
 ---
 
