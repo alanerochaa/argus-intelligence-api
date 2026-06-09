@@ -145,6 +145,10 @@ A **ARGUS Intelligence API** foi publicada utilizando **Microsoft Azure App Serv
 
 ![Deploy Azure - ARGUS Intelligence API](docs/evidencias/deploy-azure-argus.png)
 
+> Link: https://argus-intelligence-api-abe6g6facyh4fgfm.eastus-01.azurewebsites.net/
+
+![img.png](docs/evidencias/central.png)
+
 ---
 
 ## 🧱 Recursos Utilizados
@@ -884,6 +888,16 @@ Validação do consumo da mensagem e continuidade do fluxo operacional.
 
 ### 📲 Disponibilização do Aplicativo Mobile para Testes
 
+![img.png](docs/evidencias/argus-mobile.png)
+
+Fluxo sugerido de teste:
+Instalar o app pelo QR Code/Expo Build.
+Fazer login com:
+```
+E-mail: admin@argus.com
+Senha: Admin@123
+```
+O aplicativo mobile ARGUS funciona como ferramenta de campo para brigadistas e coordenadores. Após a instalação via QR Code, o avaliador pode acessar com credenciais de teste, visualizar alertas ambientais, promover alertas críticos para ocorrências, consultar focos de calor no mapa e acompanhar o fluxo operacional integrado às APIs do ecossistema ARGUS.
 
 
 # ✅ Justificativa dos Requisitos da Entrega
