@@ -892,8 +892,8 @@ Validação do consumo da mensagem e continuidade do fluxo operacional.
 
 Fluxo sugerido de teste:
 Instalar o app pelo QR Code/Expo Build.
-Fazer login com:
-```
+Fazer login:
+```                                                       
 E-mail: admin@argus.com
 Senha: Admin@123
 ```
@@ -1065,8 +1065,12 @@ O vídeo de apresentação demonstra o funcionamento completo do ecossistema **A
 
 A demonstração contempla ingestão ambiental, análise de risco, geração de alertas, consumo entre APIs, persistência em banco relacional e publicação em ambiente cloud.
 
-📺 **Assista aqui:**
-`[INSERIR LINK DO VÍDEO GS]`
+## 🎥  Assista aqui:
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=CTGgCouS7yM">
+    <img src="https://img.shields.io/badge/▶️%20Assistir%20Apresentação-YouTube-red?style=for-the-badge&logo=youtube">
+  </a>
+</p>
 
 ---
 
